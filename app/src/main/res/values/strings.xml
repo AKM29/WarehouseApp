@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">WarehouseApp</string>
     <string-array name="departments">
+        <item>All</item>
         <item>Homeware</item>
         <item>Motors</item>
         <item>Electronics</item>
