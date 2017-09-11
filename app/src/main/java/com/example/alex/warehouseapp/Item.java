@@ -8,15 +8,19 @@ public class Item {
     //Variables
     private String name;
     private String description;
+    private String department;
     private double price;
     private int id;
 
     //Constructor
-    public Item(String Name, String Description, double Price, int Id) {
-        name = Name;
-        description = Description;
-        price = Price;
-        id = Id;
+
+
+    public Item(String name, String description, String department, double price, int id) {
+        this.name = name;
+        this.description = description;
+        this.department = department;
+        this.price = price;
+        this.id = id;
     }
 
     //Getters
