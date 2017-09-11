@@ -1,3 +1,13 @@
 <resources>
     <string name="app_name">WarehouseApp</string>
+    <string-array name="departments">
+        <item>Homeware</item>
+        <item>Motors</item>
+        <item>Electronics</item>
+        <item>Stationary</item>
+        <item>Clothing</item>
+        <item>Jewelry</item>
+        <item>Gardening</item>
+        <item>Grocery</item>
+    </string-array>
 </resources>
