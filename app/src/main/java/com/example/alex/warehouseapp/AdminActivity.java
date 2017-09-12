@@ -3,21 +3,26 @@ package com.example.alex.warehouseapp;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
 public class AdminActivity extends AppCompatActivity {
 
     //Array of stores
-    String[] stores;
+    private ArrayList<String> stores = new ArrayList<>();
 
     //Reference to firebase
     DatabaseReference ref = FirebaseDatabase.getInstance().getReference();
@@ -28,7 +33,45 @@ public class AdminActivity extends AppCompatActivity {
         setContentView(R.layout.activity_admin);
 
         //Setup spinner
-        Spinner stores = (Spinner)findViewById(R.id.storeSpinner);
+        final Spinner storeSpinner = (Spinner)findViewById(R.id.storeSpinner);
+        //Setup for default
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
+                R.array.defaultstores, R.layout.support_simple_spinner_dropdown_item
+        );
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        storeSpinner.setAdapter(adapter);
+
+        //setup database listener
+        DatabaseReference storeRef = ref.child("stores");
+        storeRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                //Get stores
+                Map<String, Object> storesData = (Map<String, Object>)dataSnapshot.getValue();
+                //Iterate and add to list
+                for(Map.Entry<String, Object> entry : storesData.entrySet()){
+                    //Get item
+                    Map<String, Object> data = (Map<String, Object>)entry.getValue();
+                    Map meta = (Map)data.get("meta");
+                    //Add to list
+                    if(meta != null) {
+                        stores.add((String) meta.get("name"));
+                    }
+                }
+
+                //Bind spinner to arraylist
+                ArrayAdapter adapter = new ArrayAdapter(getBaseContext(),
+                        R.layout.support_simple_spinner_dropdown_item, stores
+                );
+                adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                storeSpinner.setAdapter(adapter);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
 
         //Logic for creating an Item
         Button createItem = (Button)findViewById(R.id.createItem);
@@ -49,7 +92,7 @@ public class AdminActivity extends AppCompatActivity {
                 Item item = new Item(name, description, department, price);
                 Map<String, Object> update = new HashMap<>();
                 Map<String, Object> items = item.map();
-                update.put("/stores/" + store + "/items" + key, items);
+                update.put("/stores/" + store + "/items/" + key, items);
 
                 //Update database
                 ref.updateChildren(update);

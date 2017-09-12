@@ -40,5 +40,16 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(nextActivity);
             }
         });
+
+        //Launch admin activity
+        Button adminButton = (Button)findViewById(R.id.adminButton);
+        adminButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //Create intent and send to admin page
+                Intent intent = new Intent(getBaseContext(), AdminActivity.class);
+                startActivity(intent);
+            }
+        });
     }
 }

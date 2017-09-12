@@ -44,4 +44,11 @@
         android:background="#FF00"
         android:fillViewport="true">
     </ScrollView>
+
+    /* to get to admin page */
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Admin"
+        android:id="@+id/adminButton"/>
 </LinearLayout>
