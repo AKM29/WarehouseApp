@@ -111,11 +111,21 @@ public class AdminActivity extends AppCompatActivity {
                 String name = ((EditText)findViewById(R.id.storeName)).getText().toString();
 
                 //Attempt to get lat long
-                double latitude = Double.parseDouble(((EditText)findViewById(R.id.storeName)).getText().toString());
-                double longitude = Double.parseDouble(((EditText)findViewById(R.id.storeName)).getText().toString());
+                double latitude = Double.parseDouble(((EditText)findViewById(R.id.storeLatitude)).getText().toString());
+                double longitude = Double.parseDouble(((EditText)findViewById(R.id.storeLongitude)).getText().toString());
 
                 //Create store
                 Store store = new Store(name, latitude, longitude);
+                //Create item and map
+                Map<String, Object> update = new HashMap<>();
+                Map<String, Object> items = store.map();
+                update.put("/stores/" + name, items);
+
+                //Update database
+                ref.updateChildren(update);
+
+                //Notify of added item
+                Toast.makeText(getBaseContext(), name + " added!", Toast.LENGTH_SHORT).show();
             }
         });
     }
