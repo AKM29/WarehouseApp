@@ -190,18 +190,21 @@ public class MainActivity extends AppCompatActivity {
                         Store s = new Store((String) meta.get("name"), (double)meta.get("latitude"), (double)meta.get("longitude"));
 
                         //Add items
-                        ArrayList<Item> itemList = new ArrayList<>();
                         if(items != null) {
                             for(Map.Entry<String, Object> itemx : items.entrySet()) {
                                 Map<String, Object> item = (Map<String, Object>)itemx.getValue();
 
                                 Item i = new Item((String)item.get("name"), (String)item.get("description"), (String)item.get("department"), (double)item.get("price"));
+                                s.addItem(i);
                             }
                         }
 
                         Stores.add(s);
                     }
                 }
+
+                //Set closest store
+                setClosest();
             }
 
             @Override
@@ -212,5 +215,22 @@ public class MainActivity extends AppCompatActivity {
     }
 
     //Set closest store
+    private void setClosest() {
+        //Hold distance and store
+        float distance = 99999999;
 
+        //Loop through and compare store
+        for(Store s : Stores) {
+            //Get location of store
+            Location l = new Location("");
+            l.setLatitude(s.getLatitude());
+            l.setLongitude(s.getLongitude());
+
+            //Get distance between store and user location
+            if(distance < l.distanceTo(clientLocation)){
+                distance = l.distanceTo(clientLocation);
+                closestStore = s;
+            }
+        }
+    }
 }
