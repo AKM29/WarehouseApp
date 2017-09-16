@@ -30,7 +30,7 @@ public class MainActivity extends AppCompatActivity {
     private Location clientLocation;
 
 
-    private static final int FINE_LOCATION_PERMISSION = 1;
+    private static final int FINE_LOCATION_PERMISSION = 12;
     private boolean allowFineLocation = false;
 
     @Override
@@ -54,7 +54,10 @@ public class MainActivity extends AppCompatActivity {
         }
         //If not allowed, ask for permission
         else {
-            Toast.makeText(getBaseContext(), "Not allowed", Toast.LENGTH_SHORT).show();
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                    FINE_LOCATION_PERMISSION
+            );
         }
 
 
@@ -99,7 +102,16 @@ public class MainActivity extends AppCompatActivity {
         switch(requestCode) {
             case FINE_LOCATION_PERMISSION: {
                 if(grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    allowFineLocation = true;
+                    //Get last known location
+                    //Ignore error, permission has been accepted if this code is reached
+                    fusedClient.getLastLocation().addOnSuccessListener(this, new OnSuccessListener<Location>() {
+                        @Override
+                        public void onSuccess(Location location)
+                        {
+                            clientLocation = location;
+                        }
+                    });
+
                 }
                 return;
             }
