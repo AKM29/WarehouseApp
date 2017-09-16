@@ -28,7 +28,8 @@ public class MainActivity extends AppCompatActivity {
 
     private FusedLocationProviderClient fusedClient;
     private Location clientLocation;
-
+    private LocationCallback locationCallback;
+    private LocationRequest locationRequest;
 
     private static final int FINE_LOCATION_PERMISSION = 12;
     private boolean allowFineLocation = false;
@@ -41,6 +42,22 @@ public class MainActivity extends AppCompatActivity {
         //Setup client
         fusedClient = LocationServices.getFusedLocationProviderClient(this);
 
+        //Setup call back
+        locationCallback = new LocationCallback() {
+            @Override
+            public void onLocationResult(LocationResult locationResult) {
+                for(Location location : locationResult.getLocations()) {
+                    clientLocation = location;
+                }
+            }
+        };
+
+        //Set location settings
+        locationRequest = new LocationRequest();
+        locationRequest.setInterval(10000);
+        locationRequest.setFastestInterval(5000);
+        locationRequest.setPriority(LocationRequest.PRIORITY_LOW_POWER);
+
         if(ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
                 == PackageManager.PERMISSION_GRANTED){
 
@@ -51,6 +68,11 @@ public class MainActivity extends AppCompatActivity {
                     clientLocation = location;
                 }
             });
+
+            //Get location updates
+            fusedClient.requestLocationUpdates(locationRequest,
+                    locationCallback,
+                    null);
         }
         //If not allowed, ask for permission
         else {
@@ -112,6 +134,11 @@ public class MainActivity extends AppCompatActivity {
                         }
                     });
 
+                    //Get location updates
+                    //Ignore error, permission has been accepted if this code is reached
+                    fusedClient.requestLocationUpdates(locationRequest,
+                            locationCallback,
+                            null);
                 }
                 return;
             }
