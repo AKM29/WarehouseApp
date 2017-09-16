@@ -65,6 +65,9 @@ public class MainActivity extends AppCompatActivity {
             public void onLocationResult(LocationResult locationResult) {
                 for(Location location : locationResult.getLocations()) {
                     clientLocation = location;
+
+                    //Set closest store
+                    setClosest();
                 }
             }
         };
@@ -73,7 +76,7 @@ public class MainActivity extends AppCompatActivity {
         locationRequest = new LocationRequest();
         locationRequest.setInterval(10000);
         locationRequest.setFastestInterval(5000);
-        locationRequest.setPriority(LocationRequest.PRIORITY_LOW_POWER);
+        locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
 
         if(ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
                 == PackageManager.PERMISSION_GRANTED){
@@ -202,9 +205,6 @@ public class MainActivity extends AppCompatActivity {
                         Stores.add(s);
                     }
                 }
-
-                //Set closest store
-                setClosest();
             }
 
             @Override
@@ -217,20 +217,27 @@ public class MainActivity extends AppCompatActivity {
     //Set closest store
     private void setClosest() {
         //Hold distance and store
-        float distance = 99999999;
+        float distance = 0;
 
         //Loop through and compare store
         for(Store s : Stores) {
             //Get location of store
-            Location l = new Location("");
-            l.setLatitude(s.getLatitude());
-            l.setLongitude(s.getLongitude());
+            if(s != null) {
+                System.out.println(s.getName());
 
-            //Get distance between store and user location
-            if(distance < l.distanceTo(clientLocation)){
-                distance = l.distanceTo(clientLocation);
-                closestStore = s;
+                Location l = new Location("");
+                l.setLatitude(s.getLatitude());
+                l.setLongitude(s.getLongitude());
+
+                //Get distance between store and user location
+                if (distance < l.distanceTo(clientLocation) || distance == 0) {
+                    distance = l.distanceTo(clientLocation);
+                    closestStore = s;
+                }
             }
         }
+
+        //Alert closest store
+        Toast.makeText(getBaseContext(), ":" + closestStore.getName(), Toast.LENGTH_LONG).show();
     }
 }
