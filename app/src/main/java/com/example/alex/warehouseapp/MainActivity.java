@@ -23,9 +23,18 @@ import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
+import java.util.ArrayList;
+import java.util.Map;
 
 public class MainActivity extends AppCompatActivity {
 
+    //Location variables
     private FusedLocationProviderClient fusedClient;
     private Location clientLocation;
     private LocationCallback locationCallback;
@@ -33,6 +42,14 @@ public class MainActivity extends AppCompatActivity {
 
     private static final int FINE_LOCATION_PERMISSION = 12;
     private boolean allowFineLocation = false;
+
+    //Database variables
+    private DatabaseReference ref = FirebaseDatabase.getInstance().getReference();
+
+    //Store and item variables
+    private Store closestStore;
+    private ArrayList<Store> Stores = new ArrayList<>();
+    private ArrayList<Item> Items = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,6 +99,8 @@ public class MainActivity extends AppCompatActivity {
             );
         }
 
+        //Set default store
+        closestStore = new Store("No store selected", 0, 0);
 
         //Setup spinner
         Spinner departmentSpinner = (Spinner)findViewById(R.id.departmentSpinner);
@@ -116,6 +135,9 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
+        //Get stores
+        getStores();
     }
 
     //Handle permission requests
@@ -144,4 +166,51 @@ public class MainActivity extends AppCompatActivity {
             }
         }
     }
+
+    //Get stores
+    private void getStores() {
+        //Stores reference
+        DatabaseReference storeRef = ref.child("stores");
+
+        //Loop and add stores
+        storeRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                //Get stores
+                Map<String, Object> storesData = (Map<String, Object>)dataSnapshot.getValue();
+                //Iterate and add to list
+                for(Map.Entry<String, Object> entry : storesData.entrySet()){
+                    //Get store
+                    Map<String, Object> data = (Map<String, Object>)entry.getValue();
+                    Map meta = (Map)data.get("meta");
+                    Map<String, Object> items = (Map<String, Object>)data.get("items");
+
+                    //Add to list
+                    if(meta != null) {
+                        Store s = new Store((String) meta.get("name"), (double)meta.get("latitude"), (double)meta.get("longitude"));
+
+                        //Add items
+                        ArrayList<Item> itemList = new ArrayList<>();
+                        if(items != null) {
+                            for(Map.Entry<String, Object> itemx : items.entrySet()) {
+                                Map<String, Object> item = (Map<String, Object>)itemx.getValue();
+
+                                Item i = new Item((String)item.get("name"), (String)item.get("description"), (String)item.get("department"), (double)item.get("price"));
+                            }
+                        }
+
+                        Stores.add(s);
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    //Set closest store
+
 }
