@@ -76,7 +76,7 @@ public class MainActivity extends AppCompatActivity {
         locationRequest = new LocationRequest();
         locationRequest.setInterval(10000);
         locationRequest.setFastestInterval(5000);
-        locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+        locationRequest.setPriority(LocationRequest.PRIORITY_LOW_POWER);
 
         if(ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
                 == PackageManager.PERMISSION_GRANTED){
@@ -164,6 +164,11 @@ public class MainActivity extends AppCompatActivity {
                     fusedClient.requestLocationUpdates(locationRequest,
                             locationCallback,
                             null);
+                } else {
+                    //Set default store
+                    if(Stores.get(0) != null) {
+                        closestStore = Stores.get(0);
+                    }
                 }
                 return;
             }
@@ -223,8 +228,6 @@ public class MainActivity extends AppCompatActivity {
         for(Store s : Stores) {
             //Get location of store
             if(s != null) {
-                System.out.println(s.getName());
-
                 Location l = new Location("");
                 l.setLatitude(s.getLatitude());
                 l.setLongitude(s.getLongitude());
@@ -236,8 +239,5 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         }
-
-        //Alert closest store
-        Toast.makeText(getBaseContext(), ":" + closestStore.getName(), Toast.LENGTH_LONG).show();
     }
 }
