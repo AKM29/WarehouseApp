@@ -14,6 +14,7 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.Toast;
 
@@ -239,5 +240,10 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         }
+
+        //Display deals
+        ItemAdapter adaptItem = new ItemAdapter(this, 0, closestStore.getDeals());
+        ListView displayItems = (ListView) findViewById(R.id.dealsView);
+        displayItems.setAdapter(adaptItem);
     }
 }
