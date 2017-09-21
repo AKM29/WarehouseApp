@@ -67,8 +67,8 @@ public class MainActivity extends AppCompatActivity {
                 for(Location location : locationResult.getLocations()) {
                     clientLocation = location;
 
-                    //Set closest store
-                    setClosest();
+                    //Get closest store
+                    getClosestStore();
                 }
             }
         };
@@ -141,7 +141,7 @@ public class MainActivity extends AppCompatActivity {
         });
 
         //Get stores
-        getStores();
+        getClosestStore();
     }
 
     //Handle permission requests
@@ -176,41 +176,28 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    //Get stores
-    private void getStores() {
-        //Stores reference
-        DatabaseReference storeRef = ref.child("stores");
+    //Gets deals from closest store
+    private void populateItems() {
+        //Get store items from firebase
+        DatabaseReference itemsref = ref.child(closestStore.getName()).child("Items");
 
-        //Loop and add stores
-        storeRef.addValueEventListener(new ValueEventListener() {
+        itemsref.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                //Get stores
-                Map<String, Object> storesData = (Map<String, Object>)dataSnapshot.getValue();
-                //Iterate and add to list
-                for(Map.Entry<String, Object> entry : storesData.entrySet()){
-                    //Get store
-                    Map<String, Object> data = (Map<String, Object>)entry.getValue();
-                    Map meta = (Map)data.get("meta");
-                    Map<String, Object> items = (Map<String, Object>)data.get("items");
+                //Get items
+                Map<String, Object> itemData = (Map<String, Object>)dataSnapshot.getValue();
 
-                    //Add to list
-                    if(meta != null) {
-                        Store s = new Store((String) meta.get("name"), (double)meta.get("latitude"), (double)meta.get("longitude"));
-
-                        //Add items
-                        if(items != null) {
-                            for(Map.Entry<String, Object> itemx : items.entrySet()) {
-                                Map<String, Object> item = (Map<String, Object>)itemx.getValue();
-
-                                Item i = new Item((String)item.get("name"), (String)item.get("description"), (String)item.get("department"), (double)item.get("price"));
-                                s.addItem(i);
-                            }
-                        }
-
-                        Stores.add(s);
+                if(itemData != null) {
+                    for (Map.Entry<String, Object> entry : itemData.entrySet()) {
+                        //Get item
+                        Map<String, Object> item = (Map<String, Object>) entry.getValue();
+                        //Add to store
+                        closestStore.addItem(new Item((String)item.get("Name"), (String)item.get("Description"), (String)item.get("Department"), (double)item.get("Price")));
                     }
                 }
+
+                //Display deals
+                displayDeals();
             }
 
             @Override
@@ -220,30 +207,50 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    //Set closest store
-    private void setClosest() {
-        //Hold distance and store
-        float distance = 0;
-
-        //Loop through and compare store
-        for(Store s : Stores) {
-            //Get location of store
-            if(s != null) {
-                Location l = new Location("");
-                l.setLatitude(s.getLatitude());
-                l.setLongitude(s.getLongitude());
-
-                //Get distance between store and user location
-                if (distance < l.distanceTo(clientLocation) || distance == 0) {
-                    distance = l.distanceTo(clientLocation);
-                    closestStore = s;
-                }
-            }
-        }
-
+    //Displays deals from list of closest store
+    private void displayDeals() {
         //Display deals
         ItemAdapter adaptItem = new ItemAdapter(this, 0, closestStore.getDeals());
         ListView displayItems = (ListView) findViewById(R.id.dealsView);
         displayItems.setAdapter(adaptItem);
+    }
+
+    //Gets the closest store from meta data
+    private void getClosestStore() {
+        //Get store meta data from firebase
+        DatabaseReference storeref = ref.child("StoreMeta");
+
+        //Get the closest store based on location
+        storeref.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                float distance = 0;
+                Location compare = new Location("");
+                Map<String, Object> metaData = (Map<String, Object>)dataSnapshot.getValue();
+
+                //Iterate through store and get closest store
+                for(Map.Entry<String, Object> entry : metaData.entrySet()){
+                    //Get store
+                    Map<String, Object> store = (Map<String, Object>)entry.getValue();
+
+                    //Get location of store
+                    compare.setLatitude((double)store.get("Latitude"));
+                    compare.setLongitude((double)store.get("Longitude"));
+
+                    //Check if closer
+                    if(clientLocation.distanceTo(compare) < distance || distance == 0) {
+                        closestStore = new Store((String)store.get("Name"), (double)store.get("Latitude"), (double)store.get("Longitude"));
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+        //Populate items
+        populateItems();
     }
 }
