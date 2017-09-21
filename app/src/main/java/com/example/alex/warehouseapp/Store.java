@@ -30,11 +30,9 @@ public class Store {
 
     public Map<String, Object> map() {
         HashMap<String, Object> result = new HashMap<>();
-        HashMap<String, Object> meta = new HashMap<>();
-        meta.put("name", name);
-        meta.put("latitude", latitude);
-        meta.put("longitude", longitude);
-        result.put("meta", meta);
+        result.put("Name", name);
+        result.put("Latitude", latitude);
+        result.put("Longitude", longitude);
         return result;
     }
 

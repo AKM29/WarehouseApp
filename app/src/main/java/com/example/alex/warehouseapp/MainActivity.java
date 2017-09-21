@@ -229,19 +229,20 @@ public class MainActivity extends AppCompatActivity {
                 Map<String, Object> metaData = (Map<String, Object>)dataSnapshot.getValue();
 
                 //Iterate through store and get closest store
-                for(Map.Entry<String, Object> entry : metaData.entrySet()){
-                    //Get store
-                    Map<String, Object> store = (Map<String, Object>)entry.getValue();
+                    for (Map.Entry<String, Object> entry : metaData.entrySet()) {
+                        //Get store
+                        Map<String, Object> store = (Map<String, Object>) entry.getValue();
 
-                    //Get location of store
-                    compare.setLatitude((double)store.get("Latitude"));
-                    compare.setLongitude((double)store.get("Longitude"));
+                            //Get location of store
+                            compare.setLatitude((double) store.get("Latitude"));
+                            compare.setLongitude((double) store.get("Longitude"));
 
-                    //Check if closer
-                    if(clientLocation.distanceTo(compare) < distance || distance == 0) {
-                        closestStore = new Store((String)store.get("Name"), (double)store.get("Latitude"), (double)store.get("Longitude"));
+                            //Check if closer
+                            if (clientLocation.distanceTo(compare) < distance || distance == 0) {
+                                closestStore = new Store((String) store.get("Name"), (double) store.get("Latitude"), (double) store.get("Longitude"));
+                            }
+
                     }
-                }
             }
 
             @Override
