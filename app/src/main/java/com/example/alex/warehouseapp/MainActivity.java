@@ -152,6 +152,7 @@ public class MainActivity extends AppCompatActivity {
                 //Start nav activity
                 Intent startNav = new Intent(getBaseContext(), NavActivity.class);
                 startNav.putExtra("Department", closestStore.getDeals().get(position).getDepartment());
+                startNav.putExtra("Name", closestStore.getDeals().get(position).getName());
                 startActivity(startNav);
             }
         });
