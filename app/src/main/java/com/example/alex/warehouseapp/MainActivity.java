@@ -11,12 +11,14 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.View;
+import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -53,9 +55,13 @@ public class MainActivity extends AppCompatActivity {
     private ArrayList<Store> Stores = new ArrayList<>();
     private ArrayList<Item> Items = new ArrayList<>();
 
+    //
+    private TextView welcomeView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_main);
 
         //Setup client
@@ -138,6 +144,9 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(startNav);
             }
         });
+
+        //
+        welcomeView = (TextView)findViewById(R.id.welcomeView);
     }
 
     //Handle permission requests
@@ -204,6 +213,8 @@ public class MainActivity extends AppCompatActivity {
                         closestStore = new Store((String)store.get("Name"), location.getLatitude(), location.getLongitude());
                     }
                 }
+
+                welcomeView.setText("The Warehouse " + closestStore.getName() + "!");
 
                 getItems();
             }
