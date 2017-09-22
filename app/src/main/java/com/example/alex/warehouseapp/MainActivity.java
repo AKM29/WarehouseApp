@@ -208,6 +208,8 @@ public class MainActivity extends AppCompatActivity {
                         closestStore = new Store((String)store.get("Name"), location.getLatitude(), location.getLongitude());
                     }
                 }
+
+                getItems();
             }
 
             @Override
@@ -215,8 +217,6 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
-
-        getItems();
     }
 
     //Get items for store
@@ -231,13 +231,17 @@ public class MainActivity extends AppCompatActivity {
                 Map<String, Object> itemData = (Map<String, Object>)dataSnapshot.getValue();
 
                 //Loop through items
-                for(Map.Entry<String, Object> entry: itemData.entrySet()) {
-                    //Get item
-                    Map<String, Object> item = (Map<String, Object>)entry.getValue();
+                if(itemData != null) {
+                    for (Map.Entry<String, Object> entry : itemData.entrySet()) {
+                        //Get item
+                        Map<String, Object> item = (Map<String, Object>) entry.getValue();
 
-                    //Add item to store
-                    closestStore.addItem(new Item((String)item.get("Name"), (String)item.get("Description"), (String)item.get("Department"), (double)item.get("Price")));
+                        //Add item to store
+                        closestStore.addItem(new Item((String) item.get("Name"), (String) item.get("Description"), (String) item.get("Department"), (double) item.get("Price")));
+                    }
                 }
+
+                displayDeals();
             }
 
             @Override
@@ -245,9 +249,6 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
-
-        //Display items
-        displayDeals();
     }
 
     //Displays deals

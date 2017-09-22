@@ -38,6 +38,11 @@ public class Store {
         return result;
     }
 
+    @Override
+    public String toString() {
+        return name + ":" + latitude + ":" + longitude;
+    }
+
     //Getters
     public String getName() {
         return name;
