@@ -141,7 +141,7 @@ public class MainActivity extends AppCompatActivity {
         });
 
         //Get stores
-        getStores();
+        getClosestStores();
     }
 
     //Handle permission requests
@@ -174,6 +174,88 @@ public class MainActivity extends AppCompatActivity {
                 return;
             }
         }
+    }
+
+    //Get closest store
+    private void getClosestStores() {
+        //Get reference to store data
+        DatabaseReference storeref = ref.child("StoreMeta");
+
+        //Listen for updates
+        storeref.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                //Variables
+                float distance = 0;
+                Location location = new Location("");
+
+                //Get data
+                Map<String, Object> StoreMeta = (Map<String, Object>)dataSnapshot.getValue();
+
+                //Loop through stores
+                for(Map.Entry<String, Object> entry : StoreMeta.entrySet()) {
+                    //Get Store
+                    Map<String, Object> store = (Map<String, Object>)entry.getValue();
+
+                    //If closer set as store
+                    location.setLatitude((double)store.get("Latitude"));
+                    location.setLongitude((double)store.get("Longitude"));
+                    if(distance == 0 || clientLocation.distanceTo(location) < distance){
+                        //Set new distance
+                        distance = clientLocation.distanceTo(location);
+
+                        //Set store
+                        closestStore = new Store((String)store.get("Name"), location.getLatitude(), location.getLongitude());
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+        getItems();
+    }
+
+    //Get items for store
+    private void getItems() {
+        //Get reference to store
+        DatabaseReference itemsref = ref.child(closestStore.getName()).child("Items");
+
+        itemsref.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                //Get data
+                Map<String, Object> itemData = (Map<String, Object>)dataSnapshot.getValue();
+
+                //Loop through items
+                for(Map.Entry<String, Object> entry: itemData.entrySet()) {
+                    //Get item
+                    Map<String, Object> item = (Map<String, Object>)entry.getValue();
+
+                    //Add item to store
+                    closestStore.addItem(new Item((String)item.get("Name"), (String)item.get("Description"), (String)item.get("Department"), (double)item.get("Price")));
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+        //Display items
+        displayDeals();
+    }
+
+    //Displays deals
+    private void displayDeals() {
+        //Display deals
+        ItemAdapter adaptItem = new ItemAdapter(this, 0, closestStore.getDeals());
+        ListView displayItems = (ListView) findViewById(R.id.dealsView);
+        displayItems.setAdapter(adaptItem);
     }
 
     //Get stores
