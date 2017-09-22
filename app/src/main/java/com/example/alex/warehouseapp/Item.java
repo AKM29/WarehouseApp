@@ -25,10 +25,10 @@ public class Item {
     //Methods
     public Map<String, Object> map() {
         HashMap<String, Object> result = new HashMap<>();
-        result.put("name", name);
-        result.put("description", description);
-        result.put("department", department);
-        result.put("price", price);
+        result.put("Name", name);
+        result.put("Description", description);
+        result.put("Department", department);
+        result.put("Price", price);
         return result;
     }
 

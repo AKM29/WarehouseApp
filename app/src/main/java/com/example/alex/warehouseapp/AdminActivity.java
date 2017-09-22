@@ -42,7 +42,7 @@ public class AdminActivity extends AppCompatActivity {
         storeSpinner.setAdapter(adapter);
 
         //setup database listener
-        DatabaseReference storeRef = ref.child("stores");
+        DatabaseReference storeRef = ref.child("StoreMeta");
         storeRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -52,10 +52,9 @@ public class AdminActivity extends AppCompatActivity {
                 for(Map.Entry<String, Object> entry : storesData.entrySet()){
                     //Get item
                     Map<String, Object> data = (Map<String, Object>)entry.getValue();
-                    Map meta = (Map)data.get("meta");
                     //Add to list
-                    if(meta != null) {
-                        stores.add((String) meta.get("name"));
+                    if(data != null) {
+                        stores.add((String) data.get("Name"));
                     }
                 }
 
@@ -86,13 +85,13 @@ public class AdminActivity extends AppCompatActivity {
                 String store = ((Spinner)findViewById(R.id.storeSpinner)).getSelectedItem().toString();
 
                 //Unique key for item
-                String key = ref.child("stores").child(store).child("items").push().getKey();
+                String key = ref.child(store).child(store).child("Items").push().getKey();
 
                 //Create item and map
                 Item item = new Item(name, description, department, price);
                 Map<String, Object> update = new HashMap<>();
                 Map<String, Object> items = item.map();
-                update.put("/stores/" + store + "/items/" + key, items);
+                update.put("/" + store + "/Items/" + key, items);
 
                 //Update database
                 ref.updateChildren(update);
@@ -119,7 +118,7 @@ public class AdminActivity extends AppCompatActivity {
                 //Create item and map
                 Map<String, Object> update = new HashMap<>();
                 Map<String, Object> items = store.map();
-                update.put("/stores/" + name, items);
+                update.put("/StoreMeta/" + name, items);
 
                 //Update database
                 ref.updateChildren(update);
