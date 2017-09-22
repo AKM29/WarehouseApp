@@ -115,21 +115,6 @@ public class MainActivity extends AppCompatActivity {
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         departmentSpinner.setAdapter(adapter);
 
-        //Setup search edit text to launch item activity
-        final EditText searchItem = (EditText)findViewById(R.id.searchItem);
-        Button submitButton = (Button)findViewById(R.id.submitButton);
-        //Launch on button press
-        submitButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                //Get text and send with intent
-                String value = searchItem.getText().toString();
-                Intent nextActivity = new Intent(getBaseContext(), ItemsActivity.class);
-                nextActivity.putExtra("search", value);
-                startActivity(nextActivity);
-            }
-        });
-
         //Launch admin activity
         Button adminButton = (Button)findViewById(R.id.adminButton);
         adminButton.setOnClickListener(new View.OnClickListener() {
