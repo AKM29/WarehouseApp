@@ -68,8 +68,8 @@ public class MainActivity extends AppCompatActivity {
                 for(Location location : locationResult.getLocations()) {
                     clientLocation = location;
 
-                    //Set closest store
-                    setClosest();
+                    //Get stores
+                    getClosestStores();
                 }
             }
         };
@@ -140,9 +140,6 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-
-        //Get stores
-        getClosestStores();
 
         //Add click to item
         ListView itemList = (ListView)findViewById(R.id.dealsView);
@@ -267,77 +264,6 @@ public class MainActivity extends AppCompatActivity {
 
     //Displays deals
     private void displayDeals() {
-        //Display deals
-        ItemAdapter adaptItem = new ItemAdapter(this, 0, closestStore.getDeals());
-        ListView displayItems = (ListView) findViewById(R.id.dealsView);
-        displayItems.setAdapter(adaptItem);
-    }
-
-    //Get stores
-    private void getStores() {
-        //Stores reference
-        DatabaseReference storeRef = ref.child("stores");
-
-        //Loop and add stores
-        storeRef.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                //Get stores
-                Map<String, Object> storesData = (Map<String, Object>)dataSnapshot.getValue();
-                //Iterate and add to list
-                for(Map.Entry<String, Object> entry : storesData.entrySet()){
-                    //Get store
-                    Map<String, Object> data = (Map<String, Object>)entry.getValue();
-                    Map meta = (Map)data.get("meta");
-                    Map<String, Object> items = (Map<String, Object>)data.get("items");
-
-                    //Add to list
-                    if(meta != null) {
-                        Store s = new Store((String) meta.get("name"), (double)meta.get("latitude"), (double)meta.get("longitude"));
-
-                        //Add items
-                        if(items != null) {
-                            for(Map.Entry<String, Object> itemx : items.entrySet()) {
-                                Map<String, Object> item = (Map<String, Object>)itemx.getValue();
-
-                                Item i = new Item((String)item.get("name"), (String)item.get("description"), (String)item.get("department"), (double)item.get("price"));
-                                s.addItem(i);
-                            }
-                        }
-
-                        Stores.add(s);
-                    }
-                }
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
-    }
-
-    //Set closest store
-    private void setClosest() {
-        //Hold distance and store
-        float distance = 0;
-
-        //Loop through and compare store
-        for(Store s : Stores) {
-            //Get location of store
-            if(s != null) {
-                Location l = new Location("");
-                l.setLatitude(s.getLatitude());
-                l.setLongitude(s.getLongitude());
-
-                //Get distance between store and user location
-                if (distance < l.distanceTo(clientLocation) || distance == 0) {
-                    distance = l.distanceTo(clientLocation);
-                    closestStore = s;
-                }
-            }
-        }
-
         //Display deals
         ItemAdapter adaptItem = new ItemAdapter(this, 0, closestStore.getDeals());
         ListView displayItems = (ListView) findViewById(R.id.dealsView);
