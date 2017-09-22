@@ -11,6 +11,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -142,6 +143,18 @@ public class MainActivity extends AppCompatActivity {
 
         //Get stores
         getClosestStores();
+
+        //Add click to item
+        ListView itemList = (ListView)findViewById(R.id.dealsView);
+        itemList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                //Start nav activity
+                Intent startNav = new Intent(getBaseContext(), NavActivity.class);
+                startNav.putExtra("Department", closestStore.getDeals().get(position).getDepartment());
+                startActivity(startNav);
+            }
+        });
     }
 
     //Handle permission requests

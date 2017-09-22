@@ -37,6 +37,8 @@ public class Item {
         return name;
     }
 
+    public String getDepartment() { return department; }
+
     public String getDescription() {
         return description;
     }
