@@ -29,10 +29,11 @@
     </LinearLayout>
 
     /* Control where deals are from */
+
     <Spinner
+        android:id="@+id/departmentSpinner"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/departmentSpinner">
+        android:layout_height="wrap_content">
 
     </Spinner>
 

@@ -65,7 +65,7 @@ public class MainActivity extends AppCompatActivity {
         locationCallback = new LocationCallback() {
             @Override
             public void onLocationResult(LocationResult locationResult) {
-                for(Location location : locationResult.getLocations()) {
+                for (Location location : locationResult.getLocations()) {
                     clientLocation = location;
 
                     //Set closest store
@@ -80,8 +80,8 @@ public class MainActivity extends AppCompatActivity {
         locationRequest.setFastestInterval(5000);
         locationRequest.setPriority(LocationRequest.PRIORITY_LOW_POWER);
 
-        if(ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
-                == PackageManager.PERMISSION_GRANTED){
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+                == PackageManager.PERMISSION_GRANTED) {
 
             //Get last known location
             fusedClient.getLastLocation().addOnSuccessListener(this, new OnSuccessListener<Location>() {
@@ -108,16 +108,30 @@ public class MainActivity extends AppCompatActivity {
         closestStore = new Store("No store selected", 0, 0);
 
         //Setup spinner
-        Spinner departmentSpinner = (Spinner)findViewById(R.id.departmentSpinner);
+        Spinner departmentSpinner = (Spinner) findViewById(R.id.departmentSpinner);
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
                 R.array.departments, R.layout.support_simple_spinner_dropdown_item
-                );
+        );
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         departmentSpinner.setAdapter(adapter);
+        departmentSpinner.setOnItemSelectedListener(new OnItemSelectedListener() {
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id){
+                String selectedItem = parent.getItemAtPosition(position).toString();
+                if(selectedItem.epuals("All")){
+                    getItems();
+                }else{
+                    ArrayList departmentList = getDepartmentList(selectedItem.toString());
+                    displayDeals(departmentList);
+                }
+            }
+            public void onNothingSelected(AdapterView<?> parent){
+
+            }
+        });
 
         //Setup search edit text to launch item activity
-        final EditText searchItem = (EditText)findViewById(R.id.searchItem);
-        Button submitButton = (Button)findViewById(R.id.submitButton);
+        final EditText searchItem = (EditText) findViewById(R.id.searchItem);
+        Button submitButton = (Button) findViewById(R.id.submitButton);
         //Launch on button press
         submitButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -131,7 +145,7 @@ public class MainActivity extends AppCompatActivity {
         });
 
         //Launch admin activity
-        Button adminButton = (Button)findViewById(R.id.adminButton);
+        Button adminButton = (Button) findViewById(R.id.adminButton);
         adminButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -145,7 +159,7 @@ public class MainActivity extends AppCompatActivity {
         getClosestStores();
 
         //Add click to item
-        ListView itemList = (ListView)findViewById(R.id.dealsView);
+        ListView itemList = (ListView) findViewById(R.id.dealsView);
         itemList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -161,21 +175,30 @@ public class MainActivity extends AppCompatActivity {
     //Handle permission requests
     @Override
     public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
-        switch(requestCode) {
+        switch (requestCode) {
             case FINE_LOCATION_PERMISSION: {
-                if(grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     //Get last known location
                     //Ignore error, permission has been accepted if this code is reached
                     fusedClient.getLastLocation().addOnSuccessListener(this, new OnSuccessListener<Location>() {
                         @Override
-                        public void onSuccess(Location location)
-                        {
+                        public void onSuccess(Location location) {
                             clientLocation = location;
                         }
                     });
 
                     //Get location updates
                     //Ignore error, permission has been accepted if this code is reached
+                    if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                        // TODO: Consider calling
+                        //    ActivityCompat#requestPermissions
+                        // here to request the missing permissions, and then overriding
+                        //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                        //                                          int[] grantResults)
+                        // to handle the case where the user grants the permission. See the documentation
+                        // for ActivityCompat#requestPermissions for more details.
+                        return;
+                    }
                     fusedClient.requestLocationUpdates(locationRequest,
                             locationCallback,
                             null);
@@ -234,7 +257,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     //Get items for store
-    private void getItems() {
+    protected void getItems() {
         //Get reference to store
         DatabaseReference itemsref = ref.child(closestStore.getName()).child("Items");
 
@@ -254,7 +277,6 @@ public class MainActivity extends AppCompatActivity {
                         closestStore.addItem(new Item((String) item.get("Name"), (String) item.get("Description"), (String) item.get("Department"), (double) item.get("Price")));
                     }
                 }
-
                 displayDeals();
             }
 
@@ -265,10 +287,27 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    private ArrayList getDepartmentList(String department){
+        ArrayList DepartmentDeals;
+        for (item : closestStore.getDeals()) {
+            if (item.getDepartment.equals(department)) {
+                DepartmentDeals.addItem(item);
+            }
+        }
+        return  DepartmentDeals;
+    }
+
+
     //Displays deals
     private void displayDeals() {
         //Display deals
         ItemAdapter adaptItem = new ItemAdapter(this, 0, closestStore.getDeals());
+        ListView displayItems = (ListView) findViewById(R.id.dealsView);
+        displayItems.setAdapter(adaptItem);
+    }
+
+    private void displayDeals(ArrayList AL){
+        ItemAdapter adaptItem = new ItemAdapter(this, 0, AL);
         ListView displayItems = (ListView) findViewById(R.id.dealsView);
         displayItems.setAdapter(adaptItem);
     }
