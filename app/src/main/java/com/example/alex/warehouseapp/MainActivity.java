@@ -114,10 +114,10 @@ public class MainActivity extends AppCompatActivity {
         );
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         departmentSpinner.setAdapter(adapter);
-        departmentSpinner.setOnItemSelectedListener(new OnItemSelectedListener() {
+        departmentSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id){
                 String selectedItem = parent.getItemAtPosition(position).toString();
-                if(selectedItem.epuals("All")){
+                if(selectedItem.equals("All")){
                     getItems();
                 }else{
                     ArrayList departmentList = getDepartmentList(selectedItem.toString());
@@ -288,12 +288,11 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private ArrayList getDepartmentList(String department){
-        ArrayList DepartmentDeals;
-        for (item : closestStore.getDeals()) {
-            if (item.getDepartment.equals(department)) {
-                DepartmentDeals.addItem(item);
+        ArrayList DepartmentDeals = new ArrayList();
+        for (Item item : closestStore.getDeals())
+            if (item.getDepartment().equals(department)) {
+                DepartmentDeals.add(item);
             }
-        }
         return  DepartmentDeals;
     }
 
