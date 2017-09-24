@@ -45,7 +45,8 @@ public class MainActivity extends AppCompatActivity {
     private LocationRequest locationRequest;
 
     private static final int FINE_LOCATION_PERMISSION = 12;
-    private boolean allowFineLocation = false;
+
+    private boolean notify = true;
 
     //Database variables
     private DatabaseReference ref = FirebaseDatabase.getInstance().getReference();
@@ -94,6 +95,10 @@ public class MainActivity extends AppCompatActivity {
                 @Override
                 public void onSuccess(Location location) {
                     clientLocation = location;
+
+                    if(notify) {
+                        notifyClient();
+                    }
                 }
             });
 
@@ -149,6 +154,19 @@ public class MainActivity extends AppCompatActivity {
         welcomeView = (TextView)findViewById(R.id.welcomeView);
     }
 
+    //Show notification
+    private void notifyClient() {
+        Location location = new Location("");
+        location.setLatitude(closestStore.getLatitude());
+        location.setLongitude(closestStore.getLongitude());
+
+        //If within 10 meters
+        if(clientLocation.distanceTo(location) < 10) {
+            Toast.makeText(this, "Welcome to The Warehouse " + closestStore.getName(), Toast.LENGTH_SHORT).show();
+            notify = false;
+        }
+    }
+
     //Handle permission requests
     @Override
     public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
@@ -162,6 +180,8 @@ public class MainActivity extends AppCompatActivity {
                         public void onSuccess(Location location)
                         {
                             clientLocation = location;
+
+                            //Check if in store
                         }
                     });
 
@@ -244,7 +264,11 @@ public class MainActivity extends AppCompatActivity {
                         Map<String, Object> item = (Map<String, Object>) entry.getValue();
 
                         //Add item to store
-                        closestStore.addItem(new Item((String) item.get("Name"), (String) item.get("Description"), (String) item.get("Department"), (double) item.get("Price")));
+                        Item i = new Item((String) item.get("Name"), (String) item.get("Description"), (String) item.get("Department"), (double) item.get("Price"));
+                        if(item.get("Image") != null) {
+                            i.setImage((String)item.get("Image"));
+                        }
+                        closestStore.addItem(i);
                     }
                 }
 
