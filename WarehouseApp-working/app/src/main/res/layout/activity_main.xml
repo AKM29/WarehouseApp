@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.example.alex.warehouseapp.MainActivity"
+    android:orientation="vertical"
+    android:background="#FF00">
+
+    /* Search to search for an item */
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:hint="Search?"
+            android:textAlignment="center"
+            android:id="@+id/searchItem"
+            android:layout_weight="1"/>
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/submitButton"
+            android:text="Go!"/>
+    </LinearLayout>
+
+    /* Control where deals are from */
+    <Spinner
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/departmentSpinner">
+
+    </Spinner>
+
+    /* Scroll view for deal item display */
+    <ScrollView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="0.51"
+        android:background="#FF00"
+        android:fillViewport="true">
+
+        <ListView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/dealsView"
+        ></ListView>
+    </ScrollView>
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/map"
+        android:onClick="open"
+        android:text="Open Map"/>
+    /* to get to admin page */
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Admin"
+        android:id="@+id/adminButton"/>
+</LinearLayout>
