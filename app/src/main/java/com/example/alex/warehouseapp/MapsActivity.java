@@ -42,14 +42,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                     .findFragmentById(R.id.map);
             mapFragment.getMapAsync(this);
-
-
-
-
         }
-
-
-
     }
 
     public void search(View v){
@@ -61,13 +54,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public void kmlLAyer(){
         try {
             InputStream ins = getResources().openRawResource(
-                    getResources().getIdentifier("map",
-                            "raw", getPackageName()));
+                    getResources().getIdentifier("map", "raw", getPackageName()));
 
             KmlLayer kmlLayer = new KmlLayer(mMap, ins, getApplicationContext());
 
             kmlLayer.addLayerToMap();
-
         } catch (IOException e) {
             e.printStackTrace();
         } catch (XmlPullParserException e) {

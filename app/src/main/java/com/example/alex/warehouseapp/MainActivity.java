@@ -27,6 +27,7 @@ import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.FirebaseApp;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -49,7 +50,7 @@ public class MainActivity extends AppCompatActivity {
     private boolean notify = true;
 
     //Database variables
-    private DatabaseReference ref = FirebaseDatabase.getInstance().getReference();
+    private DatabaseReference ref;
 
     //Store and item variables
     private Store closestStore;
@@ -64,6 +65,9 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_main);
+
+        FirebaseApp.initializeApp(this);
+        ref = FirebaseDatabase.getInstance().getReference();
 
         //Setup client
         fusedClient = LocationServices.getFusedLocationProviderClient(this);
@@ -143,7 +147,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 //Start nav activity
-                Intent startNav = new Intent(getBaseContext(), NavActivity.class);
+                Intent startNav = new Intent(getBaseContext(), MapsActivity.class);
                 startNav.putExtra("Department", closestStore.getDeals().get(position).getDepartment());
                 startNav.putExtra("Name", closestStore.getDeals().get(position).getName());
                 startActivity(startNav);
