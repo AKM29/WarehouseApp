@@ -175,30 +175,23 @@ public class MainActivity extends AppCompatActivity {
     //Handle permission requests
     @Override
     public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
-        switch (requestCode) {
+        switch(requestCode) {
             case FINE_LOCATION_PERMISSION: {
-                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                if(grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     //Get last known location
                     //Ignore error, permission has been accepted if this code is reached
                     fusedClient.getLastLocation().addOnSuccessListener(this, new OnSuccessListener<Location>() {
                         @Override
-                        public void onSuccess(Location location) {
+                        public void onSuccess(Location location)
+                        {
                             clientLocation = location;
+
+                            //Check if in store
                         }
                     });
 
                     //Get location updates
                     //Ignore error, permission has been accepted if this code is reached
-                    if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                        // TODO: Consider calling
-                        //    ActivityCompat#requestPermissions
-                        // here to request the missing permissions, and then overriding
-                        //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-                        //                                          int[] grantResults)
-                        // to handle the case where the user grants the permission. See the documentation
-                        // for ActivityCompat#requestPermissions for more details.
-                        return;
-                    }
                     fusedClient.requestLocationUpdates(locationRequest,
                             locationCallback,
                             null);
@@ -212,6 +205,7 @@ public class MainActivity extends AppCompatActivity {
             }
         }
     }
+
 
     //Get closest store
     private void getClosestStores() {
