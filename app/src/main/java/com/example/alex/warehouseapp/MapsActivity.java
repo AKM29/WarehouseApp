@@ -53,8 +53,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     //
     public void kmlLAyer(){
         try {
-            InputStream ins = getResources().openRawResource(
-                    getResources().getIdentifier("map", "raw", getPackageName()));
+            InputStream ins = getResources().openRawResource(getResources().getIdentifier("map", "raw", getPackageName()));
 
             KmlLayer kmlLayer = new KmlLayer(mMap, ins, getApplicationContext());
 
