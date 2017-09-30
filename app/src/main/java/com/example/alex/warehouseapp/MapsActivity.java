@@ -70,7 +70,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public void kmlLAyer(){
         try {
             InputStream ins = getResources().openRawResource(
-                    getResources().getIdentifier("test",
+                    getResources().getIdentifier("map",
                             "raw", getPackageName()));
 
             KmlLayer kmlLayer = new KmlLayer(mMap, ins, getApplicationContext());
@@ -114,7 +114,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mMap = googleMap;
         // Add a marker in warehouse and move the camera
         LatLng warehouse = new LatLng(-37.789339, 175.308230);
-        mMap.addMarker(new MarkerOptions().position(warehouse).title("Marker in warehouse"));
         googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(warehouse,20));
         // Zoom in, animating the camera.
         googleMap.animateCamera(CameraUpdateFactory.zoomIn());
@@ -128,31 +127,222 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
 
     protected void startDemo() {
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(-37.789339, 175.3082300), 10));
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(-37.789339, 175.308230), 10));
+        mMap.animateCamera(CameraUpdateFactory.zoomIn());
+        // Zoom out to zoom level 10, animating with a duration of 2 seconds.
+        mMap.animateCamera(CameraUpdateFactory.zoomTo(20), 2000, null);
 
         IconGenerator iconFactory = new IconGenerator(this);
-        addIcon(iconFactory, "Default", new LatLng(-37.789339, 175.308230));
 
-        iconFactory.setColor(Color.CYAN);
-        addIcon(iconFactory, "warehouse", new LatLng(-37.788427,175.307828));
-
-        iconFactory.setRotation(90);
+        iconFactory.setRotation(50);
         iconFactory.setStyle(IconGenerator.STYLE_RED);
-        addIcon(iconFactory, "warehouse", new LatLng(-37.788608,175.308181));
+        addIcon(iconFactory, "Green Garden", new LatLng(-37.78861, 175.30779));
 
-        iconFactory.setContentRotation(-90);
-        iconFactory.setStyle(IconGenerator.STYLE_PURPLE);
-        addIcon(iconFactory, "warehouse", new LatLng(-37.788641,175.307907));
+        iconFactory.setRotation(50);
+        iconFactory.setStyle(IconGenerator.STYLE_RED);
+        addIcon(iconFactory, "Indoor Furniture", new LatLng(-37.7887,175.30779));
 
-        iconFactory.setRotation(0);
-        iconFactory.setContentRotation(90);
+        iconFactory.setRotation(50);
+        iconFactory.setStyle(IconGenerator.STYLE_RED);
+        addIcon(iconFactory, "Storage", new LatLng(-37.78879,175.30782));
+
+        iconFactory.setRotation(50);
+        iconFactory.setStyle(IconGenerator.STYLE_RED);
+        addIcon(iconFactory, "Lighting", new LatLng(-37.78887,175.30784));
+
+        iconFactory.setRotation(50);
+        iconFactory.setStyle(IconGenerator.STYLE_RED);
+        addIcon(iconFactory, "Window Funishings", new LatLng(-37.78893,175.30786));
+
+        iconFactory.setRotation(50);
+        iconFactory.setStyle(IconGenerator.STYLE_RED);
+        addIcon(iconFactory, "Home Textlies", new LatLng(-37.78899,175.30789));
+
+        iconFactory.setRotation(50);
+        iconFactory.setStyle(IconGenerator.STYLE_RED);
+        addIcon(iconFactory, "Laundry Brushware", new LatLng(-37.78907, 175.30791));
+
+        iconFactory.setRotation(50);
+        iconFactory.setStyle(IconGenerator.STYLE_RED);
+        addIcon(iconFactory, "Homewear", new LatLng(-37.78914, 175.30794));
+
+        iconFactory.setRotation(50);
+        iconFactory.setStyle(IconGenerator.STYLE_RED);
+        addIcon(iconFactory, "Appliances", new LatLng(-37.7892, 175.30796));
+
+        iconFactory.setRotation(50);
+        iconFactory.setStyle(IconGenerator.STYLE_RED);
+        addIcon(iconFactory, "Event Canyon", new LatLng(-37.78926, 175.30798));
+
+        iconFactory.setRotation(50);
+        iconFactory.setStyle(IconGenerator.STYLE_RED);
+        addIcon(iconFactory, "Books", new LatLng(-37.78931, 175.308));
+
+        iconFactory.setRotation(50);
+        iconFactory.setStyle(IconGenerator.STYLE_RED);
+        addIcon(iconFactory, "Music", new LatLng(-37.78934, 175.30801));
+
+        iconFactory.setRotation(50);
+        iconFactory.setStyle(IconGenerator.STYLE_RED);
+        addIcon(iconFactory, "DVDs", new LatLng(-37.78937, 175.30802));
+
+        iconFactory.setRotation(50);
+        iconFactory.setStyle(IconGenerator.STYLE_RED);
+        addIcon(iconFactory, "Computing & Gaming", new LatLng(-37.78942, 175.30803));
+
+
+        iconFactory.setStyle(IconGenerator.STYLE_RED);
+        addIcon(iconFactory, "Dry Gardening", new LatLng(-37.78856, 175.30789));
+
+        iconFactory.setStyle(IconGenerator.STYLE_RED);
+        addIcon(iconFactory, "Hardware", new LatLng(-37.78858, 175.30795));
+
+        iconFactory.setStyle(IconGenerator.STYLE_RED);
+        addIcon(iconFactory, "Automative", new LatLng(-37.78862, 175.308));
+
+        iconFactory.setStyle(IconGenerator.STYLE_RED);
+        addIcon(iconFactory, "Toys", new LatLng(-37.78854, 175.30807));
+
+        iconFactory.setStyle(IconGenerator.STYLE_RED);
+        addIcon(iconFactory, "Sports", new LatLng(-37.78855, 175.30817));
+
+        iconFactory.setStyle(IconGenerator.STYLE_RED);
+        addIcon(iconFactory, "Wheels", new LatLng(-37.78857, 175.30824));
+
+        iconFactory.setRotation(50);
+        iconFactory.setStyle(IconGenerator.STYLE_RED);
+        addIcon(iconFactory, "Sport and Fitness", new LatLng(-37.78866, 175.30829));
+
+        iconFactory.setRotation(50);
+        iconFactory.setStyle(IconGenerator.STYLE_RED);
+        addIcon(iconFactory, "Camping", new LatLng(-37.78872, 175.30824));
+
+        iconFactory.setRotation(50);
+        iconFactory.setStyle(IconGenerator.STYLE_RED);
+        addIcon(iconFactory, "Luggage", new LatLng(-37.78877, 175.30828));
+
+        iconFactory.setRotation(50);
+        iconFactory.setStyle(IconGenerator.STYLE_RED);
+        addIcon(iconFactory, "School Tex", new LatLng(-37.78883, 175.3083));
+
+        iconFactory.setRotation(50);
+        iconFactory.setStyle(IconGenerator.STYLE_RED);
+        addIcon(iconFactory, "Footware Men", new LatLng(-37.78889, 175.30833));
+
+        iconFactory.setRotation(50);
+        iconFactory.setStyle(IconGenerator.STYLE_RED);
+        addIcon(iconFactory, "Footware Womens", new LatLng(-37.78894, 175.30834));
+
+        iconFactory.setRotation(50);
+        iconFactory.setStyle(IconGenerator.STYLE_RED);
+        addIcon(iconFactory, "Footware Childrens", new LatLng(-37.789, 175.30837));
+
+        iconFactory.setRotation(50);
+        iconFactory.setStyle(IconGenerator.STYLE_RED);
+        addIcon(iconFactory, "Baby", new LatLng(-37.78906, 175.30839));
+
+        iconFactory.setRotation(50);
+        iconFactory.setStyle(IconGenerator.STYLE_RED);
+        addIcon(iconFactory, "H&B Seasonal", new LatLng(-37.7891, 175.3084));
+
+        iconFactory.setRotation(50);
+        iconFactory.setStyle(IconGenerator.STYLE_RED);
+        addIcon(iconFactory, "H&B Everyday", new LatLng(-37.78914, 175.30841));
+
+        iconFactory.setRotation(50);
+        iconFactory.setStyle(IconGenerator.STYLE_RED);
+        addIcon(iconFactory, "Stationary", new LatLng(-37.78918, 175.30842));
+
+        iconFactory.setRotation(50);
+        iconFactory.setStyle(IconGenerator.STYLE_RED);
+        addIcon(iconFactory, "Craft", new LatLng(-37.7892, 175.30847));
+
+        iconFactory.setRotation(50);
+        iconFactory.setStyle(IconGenerator.STYLE_RED);
+        addIcon(iconFactory, "Cards", new LatLng(-37.78924, 175.30845));
+
+        iconFactory.setRotation(50);
+        iconFactory.setStyle(IconGenerator.STYLE_RED);
+        addIcon(iconFactory, "Party", new LatLng(-37.78925, 175.30849));
+
+        iconFactory.setRotation(50);
+        iconFactory.setStyle(IconGenerator.STYLE_RED);
+        addIcon(iconFactory, "Snacks", new LatLng(-37.78928, 175.30847));
+
+        iconFactory.setRotation(50);
+        iconFactory.setStyle(IconGenerator.STYLE_RED);
+        addIcon(iconFactory, "Pet Care", new LatLng(-37.78933, 175.30849));
+
+        iconFactory.setRotation(50);
         iconFactory.setStyle(IconGenerator.STYLE_GREEN);
-        addIcon(iconFactory, "warehouse", new LatLng(-37.789088,175.308354));
+        addIcon(iconFactory, "Checkout & Service", new LatLng(-37.78934, 175.3083));
 
-        iconFactory.setRotation(0);
-        iconFactory.setContentRotation(0);
-        iconFactory.setStyle(IconGenerator.STYLE_ORANGE);
-        addIcon(iconFactory, makeCharSequence(), new LatLng(-37.789339, 175.3082300));
+        iconFactory.setRotation(50);
+        iconFactory.setStyle(IconGenerator.STYLE_GREEN);
+        addIcon(iconFactory, "Entrance", new LatLng(-37.78939, 175.30817));
+
+        iconFactory.setRotation(50);
+        iconFactory.setStyle(IconGenerator.STYLE_RED);
+        addIcon(iconFactory, "Women's Outwear", new LatLng(-37.7891, 175.30821));
+
+
+        iconFactory.setRotation(50);
+        iconFactory.setStyle(IconGenerator.STYLE_RED);
+        addIcon(iconFactory, "Accessories", new LatLng(-37.78905, 175.30811));
+
+        iconFactory.setRotation(50);
+        iconFactory.setStyle(IconGenerator.STYLE_RED);
+        addIcon(iconFactory, "Women's Socks", new LatLng(-37.78901, 175.3082));
+
+        iconFactory.setRotation(50);
+        iconFactory.setStyle(IconGenerator.STYLE_RED);
+        addIcon(iconFactory, "Women's Underwear", new LatLng(-37.78896, 175.30818));
+
+        iconFactory.setRotation(50);
+        iconFactory.setStyle(IconGenerator.STYLE_RED);
+        addIcon(iconFactory, "Men's Outwear", new LatLng(-37.78899, 175.30808));
+
+        iconFactory.setRotation(50);
+        iconFactory.setStyle(IconGenerator.STYLE_RED);
+        addIcon(iconFactory, "Girl's Outwear", new LatLng(-37.78888, 175.30815));
+
+        iconFactory.setRotation(50);
+        iconFactory.setStyle(IconGenerator.STYLE_RED);
+        addIcon(iconFactory, "Girl's Socks", new LatLng(-37.78882, 175.30812));
+
+        iconFactory.setRotation(50);
+        iconFactory.setStyle(IconGenerator.STYLE_RED);
+        addIcon(iconFactory, "Boy's Socks", new LatLng(-37.78879, 175.30812));
+
+        iconFactory.setRotation(50);
+        iconFactory.setStyle(IconGenerator.STYLE_RED);
+        addIcon(iconFactory, "Boy's Outwear", new LatLng(-37.78872, 175.3081));
+
+        iconFactory.setRotation(50);
+        iconFactory.setStyle(IconGenerator.STYLE_RED);
+        addIcon(iconFactory, "Men's Sleepwear", new LatLng(-37.78872, 175.30797));
+
+        iconFactory.setRotation(50);
+        iconFactory.setStyle(IconGenerator.STYLE_RED);
+        addIcon(iconFactory, "Men's Socks", new LatLng(-37.78875, 175.30796));
+
+        iconFactory.setRotation(50);
+        iconFactory.setStyle(IconGenerator.STYLE_RED);
+        addIcon(iconFactory, "Men's Outwear", new LatLng(-37.78885, 175.308));
+
+        iconFactory.setRotation(50);
+        iconFactory.setStyle(IconGenerator.STYLE_RED);
+        addIcon(iconFactory, "Boy's Sleepwear", new LatLng(-37.78877, 175.30806));
+
+        iconFactory.setRotation(50);
+        iconFactory.setStyle(IconGenerator.STYLE_RED);
+        addIcon(iconFactory, "Girl's Sleepwear", new LatLng(-37.78884, 175.30809));
+
+        iconFactory.setRotation(50);
+        iconFactory.setStyle(IconGenerator.STYLE_RED);
+        addIcon(iconFactory, "Infantwear", new LatLng(-37.78891, 175.3081));
+
+
     }
 
     private void addIcon(IconGenerator iconFactory, CharSequence text, LatLng position) {
