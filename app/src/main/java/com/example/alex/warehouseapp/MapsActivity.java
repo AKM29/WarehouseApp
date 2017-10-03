@@ -39,11 +39,15 @@ import static android.text.Spanned.SPAN_EXCLUSIVE_EXCLUSIVE;
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
 
     private GoogleMap mMap;
+    String men_shoes;
+    private IconGenerator iconFactory;
+
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        iconFactory=new IconGenerator(this);
         if(googleServicesAvailable()){
             Toast.makeText(this,"Perfect",Toast.LENGTH_LONG).show();
             setContentView(R.layout.activity_maps);
@@ -52,11 +56,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     .findFragmentById(R.id.map);
             mapFragment.getMapAsync(this);
 
-
-
-
         }
-
 
 
     }
@@ -132,7 +132,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         // Zoom out to zoom level 10, animating with a duration of 2 seconds.
         mMap.animateCamera(CameraUpdateFactory.zoomTo(20), 2000, null);
 
-        IconGenerator iconFactory = new IconGenerator(this);
 
         iconFactory.setRotation(50);
         iconFactory.setStyle(IconGenerator.STYLE_RED);
@@ -352,6 +351,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 anchor(iconFactory.getAnchorU(), iconFactory.getAnchorV());
 
         mMap.addMarker(markerOptions);
+    }
+    private void changeColor(IconGenerator iconFactory, CharSequence text, LatLng position){
+        MarkerOptions markerOptions = new MarkerOptions().
+                icon(BitmapDescriptorFactory.fromBitmap(iconFactory.makeIcon(text))).
+                position(position).
+                anchor(iconFactory.getAnchorU(), iconFactory.getAnchorV());
+
     }
 
     private CharSequence makeCharSequence() {
