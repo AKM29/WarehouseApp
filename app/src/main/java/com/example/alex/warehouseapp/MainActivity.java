@@ -37,6 +37,9 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.Map;
 
+/*
+    Author: Alex
+ */
 public class MainActivity extends AppCompatActivity {
 
     //Location variables
@@ -156,6 +159,8 @@ public class MainActivity extends AppCompatActivity {
 
         //
         welcomeView = (TextView)findViewById(R.id.welcomeView);
+
+        displayDeals();
     }
 
     //Show notification
@@ -239,6 +244,7 @@ public class MainActivity extends AppCompatActivity {
                 }
 
                 welcomeView.setText("The Warehouse " + closestStore.getName() + "!");
+                Items = closestStore.getDeals();
 
                 getItems();
             }
@@ -289,7 +295,7 @@ public class MainActivity extends AppCompatActivity {
     //Displays deals
     private void displayDeals() {
         //Display deals
-        ItemAdapter adaptItem = new ItemAdapter(this, 0, closestStore.getDeals());
+        ItemAdapter adaptItem = new ItemAdapter(this, 0, Items);
         ListView displayItems = (ListView) findViewById(R.id.dealsView);
         displayItems.setAdapter(adaptItem);
     }

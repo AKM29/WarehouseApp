@@ -25,7 +25,7 @@ import java.util.ArrayList;
 public class ItemAdapter extends ArrayAdapter<Item> {
     private Activity activity;
     private ArrayList<Item> items;
-    private static LayoutInflater inflator = null;
+    private static LayoutInflater inflater = null;
 
     public ItemAdapter(Activity activity, int resource, ArrayList<Item> items) {
         super(activity, resource, items);
@@ -34,7 +34,7 @@ public class ItemAdapter extends ArrayAdapter<Item> {
             this.activity = activity;
             this.items = items;
 
-            inflator = (LayoutInflater) activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            inflater = (LayoutInflater) activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         } catch (Exception e) {
 
         }
@@ -64,7 +64,7 @@ public class ItemAdapter extends ArrayAdapter<Item> {
 
         try {
             if(convertView == null) {
-                view = inflator.inflate(R.layout.item_layout, null);
+                view = inflater.inflate(R.layout.item_layout, null);
                 viewHolder = new ViewHolder();
 
                 viewHolder.display_name = (TextView) view.findViewById(R.id.display_name);
@@ -72,16 +72,23 @@ public class ItemAdapter extends ArrayAdapter<Item> {
                 viewHolder.display_price = (TextView) view.findViewById(R.id.display_price);
 
                 view.setTag(viewHolder);
-            } else {
-                viewHolder = (ViewHolder) view.getTag();
 
-
+                Item i = items.get(position);
                 viewHolder.display_name.setText(items.get(position).getName());
                 double price = items.get(position).getPrice();
                 viewHolder.display_price.setText(Double.toString(price));
+            } else {
+                viewHolder = (ViewHolder) view.getTag();
+
+                Item i = items.get(position);
+                viewHolder.display_name.setText(items.get(position).getName());
+                double price = items.get(position).getPrice();
+                viewHolder.display_price.setText(Double.toString(price));
+
+                System.out.println(i.getName() + ":" + i.getPrice());
             }
         } catch (Exception e) {
-
+            System.out.println(e);
         }
 
         return view;
