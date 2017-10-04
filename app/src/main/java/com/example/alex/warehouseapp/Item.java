@@ -13,6 +13,7 @@ public class Item {
     private String description;
     private String department;
     private double price;
+    private String image;
 
     //Constructor
     public Item(String name, String description, String department, double price) {
@@ -30,6 +31,14 @@ public class Item {
         result.put("Department", department);
         result.put("Price", price);
         return result;
+    }
+
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
     }
 
     //Getters

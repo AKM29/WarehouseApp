@@ -13,12 +13,14 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.View;
+import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -27,6 +29,7 @@ import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.FirebaseApp;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -36,6 +39,9 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.Map;
 
+/*
+    Author: Alex
+ */
 public class MainActivity extends AppCompatActivity {
 
     //Location variables
@@ -45,20 +51,28 @@ public class MainActivity extends AppCompatActivity {
     private LocationRequest locationRequest;
 
     private static final int FINE_LOCATION_PERMISSION = 12;
-    private boolean allowFineLocation = false;
+
+    private boolean notify = true;
 
     //Database variables
-    private DatabaseReference ref = FirebaseDatabase.getInstance().getReference();
+    private DatabaseReference ref;
 
     //Store and item variables
     private Store closestStore;
     private ArrayList<Store> Stores = new ArrayList<>();
     private ArrayList<Item> Items = new ArrayList<>();
 
+    //
+    private TextView welcomeView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_main);
+
+        FirebaseApp.initializeApp(this);
+        ref = FirebaseDatabase.getInstance().getReference();
 
         //Setup client
         fusedClient = LocationServices.getFusedLocationProviderClient(this);
@@ -70,8 +84,8 @@ public class MainActivity extends AppCompatActivity {
                 for (Location location : locationResult.getLocations()) {
                     clientLocation = location;
 
-                    //Set closest store
-                    setClosest();
+                    //Get stores
+                    getClosestStores();
                 }
             }
         };
@@ -90,6 +104,10 @@ public class MainActivity extends AppCompatActivity {
                 @Override
                 public void onSuccess(Location location) {
                     clientLocation = location;
+
+                    if(notify) {
+                        notifyClient();
+                    }
                 }
             });
 
@@ -157,19 +175,33 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        //Get stores
-        getClosestStores();
-
         //Add click to item
         ListView itemList = (ListView) findViewById(R.id.dealsView);
         itemList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 //Start nav activity
-
                 showAlert(view, position);
             }
         });
+
+        //
+        welcomeView = (TextView)findViewById(R.id.welcomeView);
+
+        displayDeals();
+    }
+
+    //Show notification
+    private void notifyClient() {
+        Location location = new Location("");
+        location.setLatitude(closestStore.getLatitude());
+        location.setLongitude(closestStore.getLongitude());
+
+        //If within 10 meters
+        if(clientLocation.distanceTo(location) < 10) {
+            Toast.makeText(this, "Welcome to The Warehouse " + closestStore.getName(), Toast.LENGTH_SHORT).show();
+            notify = false;
+        }
     }
 
     public void showAlert(View view, final int position){
@@ -270,6 +302,9 @@ public class MainActivity extends AppCompatActivity {
                     }
                 }
 
+                welcomeView.setText("The Warehouse " + closestStore.getName() + "!");
+                Items = closestStore.getDeals();
+
                 getItems();
             }
 
@@ -298,7 +333,11 @@ public class MainActivity extends AppCompatActivity {
                         Map<String, Object> item = (Map<String, Object>) entry.getValue();
 
                         //Add item to store
-                        closestStore.addItem(new Item((String) item.get("Name"), (String) item.get("Description"), (String) item.get("Department"), (double) item.get("Price")));
+                        Item i = new Item((String) item.get("Name"), (String) item.get("Description"), (String) item.get("Department"), (double) item.get("Price"));
+                        if(item.get("Image") != null) {
+                            i.setImage((String)item.get("Image"));
+                        }
+                        closestStore.addItem(i);
                     }
                 }
                 displayDeals();
@@ -401,7 +440,8 @@ public class MainActivity extends AppCompatActivity {
         }
 
         //Display deals
-        ItemAdapter adaptItem = new ItemAdapter(this, 0, closestStore.getDeals());
+        ItemAdapter adaptItem = new ItemAdapter(this, 0, Items);
+
         ListView displayItems = (ListView) findViewById(R.id.dealsView);
         displayItems.setAdapter(adaptItem);
     }
