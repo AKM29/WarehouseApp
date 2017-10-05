@@ -55,7 +55,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     .findFragmentById(R.id.map);
             mapFragment.getMapAsync(this);
 
-
         }
 
 
@@ -86,7 +85,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public boolean googleServicesAvailable(){
         GoogleApiAvailability api = GoogleApiAvailability.getInstance();
         int isAvailable = api.isGooglePlayServicesAvailable(this);
-        if(isAvailable== ConnectionResult.SUCCESS){
+        if(isAvailable == ConnectionResult.SUCCESS){
             return true;
         }else if(api.isUserResolvableError(isAvailable)){
             Dialog dialog = api.getErrorDialog(this, isAvailable,0);
@@ -117,8 +116,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         googleMap.animateCamera(CameraUpdateFactory.zoomIn());
         // Zoom out to zoom level 10, animating with a duration of 2 seconds.
         googleMap.animateCamera(CameraUpdateFactory.zoomTo(20), 2000, null);
-        //calling the kml layer method
-        startDemo();
+        //calling the kml layer and adding markers method
+        addingMarkers();
         kmlLAyer();
 
         //Get department from intent
@@ -127,13 +126,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         String Name = intent.getStringExtra("Name");
         Toast.makeText(this, Name + " are found in the " + Department + " section", Toast.LENGTH_SHORT).show();
 
-
-        //Highlighting each section
-        if(Department.equals("Homeware")){
-            iconFactory.setRotation(50);
-            iconFactory.setStyle(IconGenerator.STYLE_RED);
-            addIcon(iconFactory, "Homewear", new LatLng(-37.78914, 175.30794));
-        }else if(Department.equals("Green Garden")) {
+        //Highlighting each section on the map
+        if(Department.equals("Green Garden")){
             iconFactory.setRotation(50);
             iconFactory.setStyle(IconGenerator.STYLE_RED);
             addIcon(iconFactory, "Green Garden", new LatLng(-37.78861, 175.30779));
@@ -141,6 +135,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             iconFactory.setRotation(50);
             iconFactory.setStyle(IconGenerator.STYLE_RED);
             addIcon(iconFactory, "Indoor Furniture", new LatLng(-37.7887,175.30779));
+        }else if(Department.equals("Storage")){
+            iconFactory.setRotation(50);
+            iconFactory.setStyle(IconGenerator.STYLE_RED);
+            addIcon(iconFactory, "Storage", new LatLng(-37.78879,175.30782));
         }else if(Department.equals("Storage")){
             iconFactory.setRotation(50);
             iconFactory.setStyle(IconGenerator.STYLE_RED);
@@ -157,34 +155,26 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             iconFactory.setRotation(50);
             iconFactory.setStyle(IconGenerator.STYLE_RED);
             addIcon(iconFactory, "Home Textlies", new LatLng(-37.78899,175.30789));
-        }else if(Department.equals("Laundry Brushware")){
+        }else if(Department.equals("Homeware")){
             iconFactory.setRotation(50);
             iconFactory.setStyle(IconGenerator.STYLE_RED);
-            addIcon(iconFactory, "Laundry Brushware", new LatLng(-37.78907, 175.30791));
-        }else if(Department.equals("Event Canyon")){
-            iconFactory.setRotation(50);
-            iconFactory.setStyle(IconGenerator.STYLE_RED);
-            addIcon(iconFactory, "Event Canyon", new LatLng(-37.78926, 175.30798));
+            addIcon(iconFactory, "Homeware", new LatLng(-37.7891, 175.30792));
         }else if(Department.equals("Appliances")){
             iconFactory.setRotation(50);
             iconFactory.setStyle(IconGenerator.STYLE_RED);
             addIcon(iconFactory, "Appliances", new LatLng(-37.7892, 175.30796));
-        }else if(Department.equals("Books")){
+        }else if(Department.equals("Event Canyon")){
             iconFactory.setRotation(50);
             iconFactory.setStyle(IconGenerator.STYLE_RED);
-            addIcon(iconFactory, "Books", new LatLng(-37.78931, 175.308));
-        }else if(Department.equals("Music")){
-            iconFactory.setRotation(50);
-            iconFactory.setStyle(IconGenerator.STYLE_RED);
-            addIcon(iconFactory, "Music", new LatLng(-37.78934, 175.30801));
-        }else if(Department.equals("DVDs")){
-            iconFactory.setRotation(50);
-            iconFactory.setStyle(IconGenerator.STYLE_RED);
-            addIcon(iconFactory, "DVDs", new LatLng(-37.78937, 175.30802));
+            addIcon(iconFactory, "Event Canyon", new LatLng(-37.78926, 175.30798));
         }else if(Department.equals("Electronics")){
             iconFactory.setRotation(50);
             iconFactory.setStyle(IconGenerator.STYLE_RED);
             addIcon(iconFactory, "Electronics", new LatLng(-37.78942, 175.30803));
+        }else if(Department.equals("Media")){
+            iconFactory.setRotation(50);
+            iconFactory.setStyle(IconGenerator.STYLE_RED);
+            addIcon(iconFactory, "Media", new LatLng(-37.78933, 175.30801));
         }else if(Department.equals("Dry Gardening")){
             iconFactory.setStyle(IconGenerator.STYLE_RED);
             addIcon(iconFactory, "Dry Gardening", new LatLng(-37.78856, 175.30789));
@@ -222,39 +212,15 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }else if(Department.equals("Men's Shoes")){
             iconFactory.setRotation(50);
             iconFactory.setStyle(IconGenerator.STYLE_RED);
-            addIcon(iconFactory, "Men's Footware", new LatLng(-37.78889, 175.30833));
-        }else if(Department.equals("Women's Shoes")){
+            addIcon(iconFactory, "Footwear", new LatLng(-37.78897, 175.30836));
+        }else if(Department.equals("H&B")){
             iconFactory.setRotation(50);
             iconFactory.setStyle(IconGenerator.STYLE_RED);
-            addIcon(iconFactory, "Women's Footware", new LatLng(-37.78894, 175.30834));
-        }else if(Department.equals("Children's Shoes")){
+            addIcon(iconFactory, "H & B", new LatLng(-37.78912, 175.30841));
+        }else if(Department.equals("Stationary & Crafts")){
             iconFactory.setRotation(50);
             iconFactory.setStyle(IconGenerator.STYLE_RED);
-            addIcon(iconFactory, "Children's Footware", new LatLng(-37.789, 175.30837));
-        }else if(Department.equals("Baby")){
-            iconFactory.setRotation(50);
-            iconFactory.setStyle(IconGenerator.STYLE_RED);
-            addIcon(iconFactory, "Baby", new LatLng(-37.78906, 175.30839));
-        }else if(Department.equals("H&B Seasonal")){
-            iconFactory.setRotation(50);
-            iconFactory.setStyle(IconGenerator.STYLE_RED);
-            addIcon(iconFactory, "H&B Seasonal", new LatLng(-37.7891, 175.3084));
-        }else if(Department.equals("H&B Everyday")){
-            iconFactory.setRotation(50);
-            iconFactory.setStyle(IconGenerator.STYLE_RED);
-            addIcon(iconFactory, "H&B Everyday", new LatLng(-37.78914, 175.30841));
-        }else if(Department.equals("Stationary")){
-            iconFactory.setRotation(50);
-            iconFactory.setStyle(IconGenerator.STYLE_RED);
-            addIcon(iconFactory, "Stationary", new LatLng(-37.78918, 175.30842));
-        }else if(Department.equals("Craft")){
-            iconFactory.setRotation(50);
-            iconFactory.setStyle(IconGenerator.STYLE_RED);
-            addIcon(iconFactory, "Craft", new LatLng(-37.7892, 175.30847));
-        }else if(Department.equals("Cards")){
-            iconFactory.setRotation(50);
-            iconFactory.setStyle(IconGenerator.STYLE_RED);
-            addIcon(iconFactory, "Cards", new LatLng(-37.78924, 175.30845));
+            addIcon(iconFactory, "Stationary & Crafts", new LatLng(-37.7892, 175.30845));
         }else if(Department.equals("Party")){
             iconFactory.setRotation(50);
             iconFactory.setStyle(IconGenerator.STYLE_RED);
@@ -267,68 +233,29 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             iconFactory.setRotation(50);
             iconFactory.setStyle(IconGenerator.STYLE_RED);
             addIcon(iconFactory, "Pet Care", new LatLng(-37.78933, 175.30849));
-        }else if(Department.equals("Women's Outwear")){
+        }else if(Department.equals("Women's Clothing")){
             iconFactory.setRotation(50);
             iconFactory.setStyle(IconGenerator.STYLE_RED);
-            addIcon(iconFactory, "Women's Outwear", new LatLng(-37.7891, 175.30821));
+            addIcon(iconFactory, "Women's Clothing", new LatLng(-37.78908, 175.30823));
         }else if(Department.equals("Jewelry")){
             iconFactory.setRotation(50);
             iconFactory.setStyle(IconGenerator.STYLE_RED);
             addIcon(iconFactory, "Jewelry", new LatLng(-37.78905, 175.30811));
-        }else if(Department.equals("Women's Socks")){
-            iconFactory.setRotation(50);
-            iconFactory.setStyle(IconGenerator.STYLE_BLUE);
-            addIcon(iconFactory, "Women's Socks", new LatLng(-37.78901, 175.3082));
-        }else if(Department.equals("Women's Underwear")){
+        }else if(Department.equals("Men's Clothing")){
             iconFactory.setRotation(50);
             iconFactory.setStyle(IconGenerator.STYLE_RED);
-            addIcon(iconFactory, "Women's Underwear", new LatLng(-37.78896, 175.30818));
-        }else if(Department.equals("Men's Outwear")){
+            addIcon(iconFactory, "Men's Clothing", new LatLng(-37.78881, 175.308));
+            addIcon(iconFactory, "Men's Clothing", new LatLng(-37.78899, 175.30808));
+        }else if(Department.equals("Kid's Clothing")){
             iconFactory.setRotation(50);
             iconFactory.setStyle(IconGenerator.STYLE_RED);
-            addIcon(iconFactory, "Men's Outwear", new LatLng(-37.78899, 175.30808));
-        }else if(Department.equals("Girl's Outwear")){
-            iconFactory.setRotation(50);
-            iconFactory.setStyle(IconGenerator.STYLE_RED);
-            addIcon(iconFactory, "Girl's Outwear", new LatLng(-37.78888, 175.30815));
-        }else if(Department.equals("Boy's Socks")){
-            iconFactory.setRotation(50);
-            iconFactory.setStyle(IconGenerator.STYLE_RED);
-            addIcon(iconFactory, "Boy's Socks", new LatLng(-37.78879, 175.30812));
-        }else if(Department.equals("Boy's Outwear")) {
-            iconFactory.setRotation(50);
-            iconFactory.setStyle(IconGenerator.STYLE_RED);
-            addIcon(iconFactory, "Boy's Outwear", new LatLng(-37.78872, 175.3081));
-        }else if(Department.equals("Men's Sleepwear")){
-            iconFactory.setRotation(50);
-            iconFactory.setStyle(IconGenerator.STYLE_RED);
-            addIcon(iconFactory, "Men's Sleepwear", new LatLng(-37.78872, 175.30797));
-        }else if(Department.equals("Men's Socks")){
-            iconFactory.setRotation(50);
-            iconFactory.setStyle(IconGenerator.STYLE_RED);
-            addIcon(iconFactory, "Men's Socks", new LatLng(-37.78875, 175.30796));
-        }else if(Department.equals("Men's Outwear")){
-            iconFactory.setRotation(50);
-            iconFactory.setStyle(IconGenerator.STYLE_RED);
-            addIcon(iconFactory, "Men's Outwear", new LatLng(-37.78885, 175.308));
-        }else if(Department.equals("Boy's Sleepwear")){
-            iconFactory.setRotation(50);
-            iconFactory.setStyle(IconGenerator.STYLE_RED);
-            addIcon(iconFactory, "Boy's Sleepwear", new LatLng(-37.78877, 175.30806));
-        }else if(Department.equals("Girl's Sleepwear")){
-            iconFactory.setRotation(50);
-            iconFactory.setStyle(IconGenerator.STYLE_RED);
-            addIcon(iconFactory, "Girl's Sleepwear", new LatLng(-37.78884, 175.30809));
-        }else if(Department.equals("Infantwear")){
-            iconFactory.setRotation(50);
-            iconFactory.setStyle(IconGenerator.STYLE_RED);
-            addIcon(iconFactory, "Infantwear", new LatLng(-37.78891, 175.3081));
+            addIcon(iconFactory, "Kid's Clothing", new LatLng(-37.78879, 175.30811));
         }
+
     }
 
-    // Marking each section
-
-    protected void startDemo() {
+    //Adding icon on each section on the map
+    protected void addingMarkers() {
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(-37.789339, 175.308230), 10));
         mMap.animateCamera(CameraUpdateFactory.zoomIn());
         // Zoom out to zoom level 10, animating with a duration of 2 seconds.
@@ -359,13 +286,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         iconFactory.setStyle(IconGenerator.STYLE_BLUE);
         addIcon(iconFactory, "Home Textlies", new LatLng(-37.78899,175.30789));
 
-        iconFactory.setRotation(50);
-        iconFactory.setStyle(IconGenerator.STYLE_BLUE);
-        addIcon(iconFactory, "Laundry Brushware", new LatLng(-37.78907, 175.30791));
 
         iconFactory.setRotation(50);
         iconFactory.setStyle(IconGenerator.STYLE_BLUE);
-        addIcon(iconFactory, "Homewear", new LatLng(-37.78914, 175.30794));
+        addIcon(iconFactory, "Homeware", new LatLng(-37.7891, 175.30792));
 
         iconFactory.setRotation(50);
         iconFactory.setStyle(IconGenerator.STYLE_BLUE);
@@ -377,20 +301,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         iconFactory.setRotation(50);
         iconFactory.setStyle(IconGenerator.STYLE_BLUE);
-        addIcon(iconFactory, "Books", new LatLng(-37.78931, 175.308));
+        addIcon(iconFactory, "Electronics", new LatLng(-37.78942, 175.30803));
 
         iconFactory.setRotation(50);
         iconFactory.setStyle(IconGenerator.STYLE_BLUE);
-        addIcon(iconFactory, "Music", new LatLng(-37.78934, 175.30801));
-
-        iconFactory.setRotation(50);
-        iconFactory.setStyle(IconGenerator.STYLE_BLUE);
-        addIcon(iconFactory, "DVDs", new LatLng(-37.78937, 175.30802));
-
-        iconFactory.setRotation(50);
-        iconFactory.setStyle(IconGenerator.STYLE_BLUE);
-        addIcon(iconFactory, "Computing & Gaming", new LatLng(-37.78942, 175.30803));
-
+        addIcon(iconFactory, "Media", new LatLng(-37.78933, 175.30801));
 
         iconFactory.setStyle(IconGenerator.STYLE_BLUE);
         addIcon(iconFactory, "Dry Gardening", new LatLng(-37.78856, 175.30789));
@@ -426,41 +341,21 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         iconFactory.setStyle(IconGenerator.STYLE_BLUE);
         addIcon(iconFactory, "School Tex", new LatLng(-37.78883, 175.3083));
 
-        iconFactory.setRotation(50);
-        iconFactory.setStyle(IconGenerator.STYLE_BLUE);
-        addIcon(iconFactory, "Footware Men", new LatLng(-37.78889, 175.30833));
 
         iconFactory.setRotation(50);
         iconFactory.setStyle(IconGenerator.STYLE_BLUE);
-        addIcon(iconFactory, "Footware Womens", new LatLng(-37.78894, 175.30834));
+        addIcon(iconFactory, "Footwear", new LatLng(-37.78897, 175.30836));
+
 
         iconFactory.setRotation(50);
         iconFactory.setStyle(IconGenerator.STYLE_BLUE);
-        addIcon(iconFactory, "Footware Childrens", new LatLng(-37.789, 175.30837));
+        addIcon(iconFactory, "H&B", new LatLng(-37.78912, 175.30841));
+
 
         iconFactory.setRotation(50);
         iconFactory.setStyle(IconGenerator.STYLE_BLUE);
-        addIcon(iconFactory, "Baby", new LatLng(-37.78906, 175.30839));
+        addIcon(iconFactory, "Stationary&Crafts", new LatLng(-37.7892, 175.30845));
 
-        iconFactory.setRotation(50);
-        iconFactory.setStyle(IconGenerator.STYLE_BLUE);
-        addIcon(iconFactory, "H&B Seasonal", new LatLng(-37.7891, 175.3084));
-
-        iconFactory.setRotation(50);
-        iconFactory.setStyle(IconGenerator.STYLE_BLUE);
-        addIcon(iconFactory, "H&B Everyday", new LatLng(-37.78914, 175.30841));
-
-        iconFactory.setRotation(50);
-        iconFactory.setStyle(IconGenerator.STYLE_BLUE);
-        addIcon(iconFactory, "Stationary", new LatLng(-37.78918, 175.30842));
-
-        iconFactory.setRotation(50);
-        iconFactory.setStyle(IconGenerator.STYLE_BLUE);
-        addIcon(iconFactory, "Craft", new LatLng(-37.7892, 175.30847));
-
-        iconFactory.setRotation(50);
-        iconFactory.setStyle(IconGenerator.STYLE_BLUE);
-        addIcon(iconFactory, "Cards", new LatLng(-37.78924, 175.30845));
 
         iconFactory.setRotation(50);
         iconFactory.setStyle(IconGenerator.STYLE_BLUE);
@@ -484,76 +379,39 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         iconFactory.setRotation(50);
         iconFactory.setStyle(IconGenerator.STYLE_BLUE);
-        addIcon(iconFactory, "Women's Outwear", new LatLng(-37.7891, 175.30821));
+        addIcon(iconFactory, "Women's Clothing", new LatLng(-37.78908, 175.30823));
 
 
         iconFactory.setRotation(50);
         iconFactory.setStyle(IconGenerator.STYLE_BLUE);
-        addIcon(iconFactory, "Accessories", new LatLng(-37.78905, 175.30811));
+        addIcon(iconFactory, "Jewelry", new LatLng(-37.78905, 175.30811));
+
 
         iconFactory.setRotation(50);
         iconFactory.setStyle(IconGenerator.STYLE_BLUE);
-        addIcon(iconFactory, "Women's Socks", new LatLng(-37.78901, 175.3082));
+        addIcon(iconFactory, "Men's Clothing", new LatLng(-37.78881, 175.308));
+
 
         iconFactory.setRotation(50);
         iconFactory.setStyle(IconGenerator.STYLE_BLUE);
-        addIcon(iconFactory, "Women's Underwear", new LatLng(-37.78896, 175.30818));
+        addIcon(iconFactory, "Men's Clothing", new LatLng(-37.78899, 175.30808));
 
         iconFactory.setRotation(50);
         iconFactory.setStyle(IconGenerator.STYLE_BLUE);
-        addIcon(iconFactory, "Men's Outwear", new LatLng(-37.78899, 175.30808));
-
-        iconFactory.setRotation(50);
-        iconFactory.setStyle(IconGenerator.STYLE_BLUE);
-        addIcon(iconFactory, "Girl's Outwear", new LatLng(-37.78888, 175.30815));
-
-        iconFactory.setRotation(50);
-        iconFactory.setStyle(IconGenerator.STYLE_BLUE);
-        addIcon(iconFactory, "Girl's Socks", new LatLng(-37.78882, 175.30812));
-
-        iconFactory.setRotation(50);
-        iconFactory.setStyle(IconGenerator.STYLE_BLUE);
-        addIcon(iconFactory, "Boy's Socks", new LatLng(-37.78879, 175.30812));
-
-        iconFactory.setRotation(50);
-        iconFactory.setStyle(IconGenerator.STYLE_BLUE);
-        addIcon(iconFactory, "Boy's Outwear", new LatLng(-37.78872, 175.3081));
-
-        iconFactory.setRotation(50);
-        iconFactory.setStyle(IconGenerator.STYLE_BLUE);
-        addIcon(iconFactory, "Men's Sleepwear", new LatLng(-37.78872, 175.30797));
-
-        iconFactory.setRotation(50);
-        iconFactory.setStyle(IconGenerator.STYLE_BLUE);
-        addIcon(iconFactory, "Men's Socks", new LatLng(-37.78875, 175.30796));
-
-        iconFactory.setRotation(50);
-        iconFactory.setStyle(IconGenerator.STYLE_BLUE);
-        addIcon(iconFactory, "Men's Outwear", new LatLng(-37.78885, 175.308));
-
-        iconFactory.setRotation(50);
-        iconFactory.setStyle(IconGenerator.STYLE_BLUE);
-        addIcon(iconFactory, "Boy's Sleepwear", new LatLng(-37.78877, 175.30806));
-
-        iconFactory.setRotation(50);
-        iconFactory.setStyle(IconGenerator.STYLE_BLUE);
-        addIcon(iconFactory, "Girl's Sleepwear", new LatLng(-37.78884, 175.30809));
-
-        iconFactory.setRotation(50);
-        iconFactory.setStyle(IconGenerator.STYLE_BLUE);
-        addIcon(iconFactory, "Infantwear", new LatLng(-37.78891, 175.3081));
+        addIcon(iconFactory, "Kid's Clothing", new LatLng(-37.78879, 175.30811));
 
 
     }
-
-    // adding icon onto each section method
-    public void addIcon(IconGenerator iconFactory, CharSequence text, LatLng position) {
+    //add icon method
+    private void addIcon(IconGenerator iconFactory, CharSequence text, LatLng position) {
         MarkerOptions markerOptions = new MarkerOptions().
                 icon(BitmapDescriptorFactory.fromBitmap(iconFactory.makeIcon(text))).
                 position(position).
                 anchor(iconFactory.getAnchorU(), iconFactory.getAnchorV());
-                mMap.addMarker(markerOptions);
+
+        mMap.addMarker(markerOptions);
     }
+
 
 
 }
