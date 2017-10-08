@@ -1,16 +1,25 @@
 package com.example.alex.warehouseapp;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.SearchView;
 
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.maps.android.ui.IconGenerator;
+
 import java.util.ArrayList;
 import java.util.Arrays;
+
+import static android.provider.AlarmClock.EXTRA_MESSAGE;
 
 
 /**
@@ -22,6 +31,8 @@ public class Search extends Activity {
     ListView listView;
     SearchView searchView;
     ArrayAdapter<String> adapter;
+    private IconGenerator iconFactory;
+
 
 
     @Override
