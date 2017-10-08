@@ -299,4 +299,10 @@ public class MainActivity extends AppCompatActivity {
         ListView displayItems = (ListView) findViewById(R.id.dealsView);
         displayItems.setAdapter(adaptItem);
     }
+
+    //New intent to the map class
+    public void viewMap(View view){
+        Intent intent = new Intent(this,MapsActivity.class);
+        startActivity(intent);
+    }
 }
