@@ -13,14 +13,25 @@ public class Store {
     private String name;
     private double latitude;
     private double longitude;
+    private String wifi;
 
     private ArrayList<Item> deals = new ArrayList<>();
 
+    public String getWifi() {
+        return wifi;
+    }
+
+    public void setWifi(String wifi) {
+        this.wifi = wifi;
+    }
+
     //Constructor
-    public Store(String name, double latitude, double longitude) {
+    public Store(String name, double latitude, double longitude, String wifi) {
         this.name = name;
         this.latitude = latitude;
         this.longitude = longitude;
+        this.wifi = wifi;
+
     }
 
     //Methods

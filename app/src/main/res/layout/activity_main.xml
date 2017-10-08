@@ -58,4 +58,10 @@
         android:layout_height="wrap_content"
         android:text="Admin"
         android:id="@+id/adminButton"/>
+
+    <Button
+        android:id="@+id/button_check"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Check" />
 </LinearLayout>

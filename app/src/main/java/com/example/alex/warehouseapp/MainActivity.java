@@ -2,10 +2,13 @@ package com.example.alex.warehouseapp;
 
 import android.*;
 import android.Manifest;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
+import android.net.wifi.WifiInfo;
+import android.net.wifi.WifiManager;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
@@ -64,6 +67,9 @@ public class MainActivity extends AppCompatActivity {
 
     //
     private TextView welcomeView;
+
+    private WifiManager wifimanager;
+    private WifiInfo connection;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -125,7 +131,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
         //Set default store
-        closestStore = new Store("No store selected", 0, 0);
+        closestStore = new Store("No store selected", 0, 0, "");
 
         //Setup spinner
         Spinner departmentSpinner = (Spinner) findViewById(R.id.departmentSpinner);
@@ -150,7 +156,7 @@ public class MainActivity extends AppCompatActivity {
         });
 
         //Setup search edit text to launch item activity
-        final EditText searchItem = (EditText) findViewById(R.id.searchItem);
+        /*final EditText searchItem = (EditText) findViewById(R.id.searchItem);
         Button submitButton = (Button) findViewById(R.id.submitButton);
         //Launch on button press
         submitButton.setOnClickListener(new View.OnClickListener() {
@@ -162,7 +168,7 @@ public class MainActivity extends AppCompatActivity {
                 nextActivity.putExtra("search", value);
                 startActivity(nextActivity);
             }
-        });
+        });*/
 
         //Launch admin activity
         Button adminButton = (Button) findViewById(R.id.adminButton);
@@ -174,6 +180,27 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
+        final Thread thread = new Thread() {
+            public void run() {
+                try{
+                    while(true){
+                        String display;
+                        wifimanager = (WifiManager) getSystemService(Context.WIFI_SERVICE);
+                        connection = wifimanager.getConnectionInfo();
+                        display = connection.getSSID();
+
+                        if(connection.getSSID().equals(closestStore.getWifi())){
+                            Toast.makeText(getBaseContext(), "Welcome to the Warehouse!!!", Toast.LENGTH_LONG).show();
+                        }
+                    }
+                }finally {
+
+                }
+            }
+        };
+
+        thread.run();
 
         //Add click to item
         ListView itemList = (ListView) findViewById(R.id.dealsView);
@@ -298,7 +325,7 @@ public class MainActivity extends AppCompatActivity {
                         distance = clientLocation.distanceTo(location);
 
                         //Set store
-                        closestStore = new Store((String)store.get("Name"), location.getLatitude(), location.getLongitude());
+                        closestStore = new Store((String)store.get("Name"), location.getLatitude(), location.getLongitude(), (String)store.get("Wifi"));
                     }
                 }
 
