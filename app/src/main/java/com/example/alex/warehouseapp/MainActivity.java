@@ -188,10 +188,9 @@ public class MainActivity extends AppCompatActivity {
                         String display;
                         wifimanager = (WifiManager) getSystemService(Context.WIFI_SERVICE);
                         connection = wifimanager.getConnectionInfo();
-                        display = connection.getSSID();
 
                         if(connection.getSSID().equals(closestStore.getWifi())){
-                            Toast.makeText(getBaseContext(), "Welcome to the Warehouse!!!", Toast.LENGTH_LONG).show();
+                            notifyClient(connection);
                         }
                     }
                 }finally {
@@ -216,6 +215,27 @@ public class MainActivity extends AppCompatActivity {
         welcomeView = (TextView)findViewById(R.id.welcomeView);
 
         displayDeals();
+    }
+
+    private void notifyClient(WifiInfo wifi){
+        AlertDialog.Builder myAlert = new AlertDialog.Builder(this);
+        myAlert.setMessage("Welcome to The Warehouse!!!")
+                .setPositiveButton("View Deals", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                })
+                .setNegativeButton("Close", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                })
+                .setTitle("The Warehouse")
+                //.setIcon()
+                .create();
+        myAlert.show();
     }
 
     //Show notification
@@ -421,7 +441,7 @@ public class MainActivity extends AppCompatActivity {
 
                     //Add to list
                     if(meta != null) {
-                        Store s = new Store((String) meta.get("name"), (double)meta.get("latitude"), (double)meta.get("longitude"));
+                        Store s = new Store((String) meta.get("name"), (double)meta.get("latitude"), (double)meta.get("longitude"), "lol idk");
 
                         //Add items
                         if(items != null) {
