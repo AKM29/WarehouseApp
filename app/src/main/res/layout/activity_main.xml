@@ -54,26 +54,11 @@
     /* to get to admin page */
 
 
-    <LinearLayout
+    <Button
+        android:id="@+id/adminButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
-
-        <Button
-            android:id="@+id/button3"
-            android:layout_width="176dp"
-            android:onClick="viewMap"
-            android:layout_height="wrap_content"
-            android:text="The Map"
-            />
-
-        <Button
-            android:id="@+id/adminButton"
-            android:layout_marginLeft="20dp"
-            android:layout_width="181dp"
-            android:layout_height="wrap_content"
-            android:text="Admin" />
-    </LinearLayout>
+        android:text="Admin" />
 
 
 </LinearLayout>

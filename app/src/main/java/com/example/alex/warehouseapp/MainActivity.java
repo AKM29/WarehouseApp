@@ -300,9 +300,5 @@ public class MainActivity extends AppCompatActivity {
         displayItems.setAdapter(adaptItem);
     }
 
-    //New intent to the map class
-    public void viewMap(View view){
-        Intent intent = new Intent(this,MapsActivity.class);
-        startActivity(intent);
-    }
+
 }
