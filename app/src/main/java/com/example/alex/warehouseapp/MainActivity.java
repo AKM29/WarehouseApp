@@ -191,6 +191,17 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        //Launch map activity
+        Button mapButton = (Button)findViewById(R.id.mapButton);
+        mapButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //Create intent and send to admin page
+                Intent intent = new Intent(getBaseContext(), NavActivity.class);
+                startActivity(intent);
+            }
+        });
+
         Runnable runnable = new Runnable() {
             @Override
             public void run() {
@@ -502,4 +513,6 @@ public class MainActivity extends AppCompatActivity {
         ListView displayItems = (ListView) findViewById(R.id.dealsView);
         displayItems.setAdapter(adaptItem);
     }
+
+
 }

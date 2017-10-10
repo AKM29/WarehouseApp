@@ -59,11 +59,28 @@
         ></ListView>
     </ScrollView>
 
-    /* to get to admin page */
-    <Button
+
+
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Admin"
-        android:id="@+id/adminButton"/>
+        android:orientation="horizontal">
+
+        /* to get to admin page */
+        <Button
+            android:id="@+id/adminButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Admin" />
+
+        /* to get to map page */
+        <Button
+            android:id="@+id/mapButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="MAP" />
+    </LinearLayout>
 
 </LinearLayout>

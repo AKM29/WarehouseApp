@@ -15,39 +15,5 @@
         <item>Database Loading!</item>
     </string-array>
     <string name="title_activity_maps">Map</string>
-    <string-array name="store_items">
-        <item>TVs</item>
-        <item>Computers</item>
-        <item>Mobile phone</item>
-        <item>Tablets</item>
-        <item>CDs</item>
-        <item>Books</item>
-        <item>Men shirts</item>
-        <item>Men socks</item>
-        <item>Men shoes</item>
-        <item>Men pants</item>
-        <item>Boys pants</item>
-        <item>Boys socks</item>
-        <item>Boys shoes</item>
-        <item>Boys shirts</item>
-        <item>Women pants</item>
-        <item>Women top</item>
-        <item>Women socks</item>
-        <item>Women shoes</item>
-        <item>Girls socks</item>
-        <item>Girls shoes</item>
-        <item>Girls pants</item>
-        <item>Girls tops</item>
-        <item>Accessories</item>
-        <item>School tex</item>
-        <item>Gardening items</item>
-        <item>Wheel</item>
-        <item>Toys</item>
-        <item>Luggage</item>
-        <item>Baby items</item>
-        <item>Baby clothes</item>
-        <item>Party items</item>
-        <item>Housewear</item>
-        <item>Pet care</item>
-    </string-array>
+
 </resources>
