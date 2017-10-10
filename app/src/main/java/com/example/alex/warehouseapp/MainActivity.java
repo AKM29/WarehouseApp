@@ -144,6 +144,17 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        //Launch map activity
+        Button mapButton = (Button)findViewById(R.id.mapButton);
+        mapButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //Create intent and send to admin page
+                Intent intent = new Intent(getBaseContext(), NavActivity.class);
+                startActivity(intent);
+            }
+        });
+
         //Add click to item
         ListView itemList = (ListView)findViewById(R.id.dealsView);
         itemList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
