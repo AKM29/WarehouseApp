@@ -2,11 +2,16 @@ package com.example.alex.warehouseapp;
 
 import android.*;
 import android.Manifest;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
+import android.net.wifi.WifiInfo;
+import android.net.wifi.WifiManager;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.KeyEvent;
@@ -63,6 +68,9 @@ public class MainActivity extends AppCompatActivity {
     //
     private TextView welcomeView;
 
+    private WifiManager wifimanager;
+    private WifiInfo connection;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -79,7 +87,7 @@ public class MainActivity extends AppCompatActivity {
         locationCallback = new LocationCallback() {
             @Override
             public void onLocationResult(LocationResult locationResult) {
-                for(Location location : locationResult.getLocations()) {
+                for (Location location : locationResult.getLocations()) {
                     clientLocation = location;
 
                     //Get stores
@@ -94,8 +102,8 @@ public class MainActivity extends AppCompatActivity {
         locationRequest.setFastestInterval(5000);
         locationRequest.setPriority(LocationRequest.PRIORITY_LOW_POWER);
 
-        if(ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
-                == PackageManager.PERMISSION_GRANTED){
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+                == PackageManager.PERMISSION_GRANTED) {
 
             //Get last known location
             fusedClient.getLastLocation().addOnSuccessListener(this, new OnSuccessListener<Location>() {
@@ -123,18 +131,57 @@ public class MainActivity extends AppCompatActivity {
         }
 
         //Set default store
-        closestStore = new Store("No store selected", 0, 0);
+        closestStore = new Store("No store selected", 0, 0, "");
 
         //Setup spinner
-        Spinner departmentSpinner = (Spinner)findViewById(R.id.departmentSpinner);
+        Spinner departmentSpinner = (Spinner) findViewById(R.id.departmentSpinner);
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
                 R.array.departments, R.layout.support_simple_spinner_dropdown_item
-                );
+        );
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         departmentSpinner.setAdapter(adapter);
+        departmentSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id){
+                String selectedItem = parent.getItemAtPosition(position).toString();
+                if(selectedItem.equals("All")){
+                    getItems();
+                }else{
+                    ArrayList departmentList = getDepartmentList(selectedItem.toString());
+                    displayDeals(departmentList);
+                }
+            }
+            public void onNothingSelected(AdapterView<?> parent){
+
+            }
+        });
+
+        //Setup search edit text to launch item activity
+        /*final EditText searchItem = (EditText) findViewById(R.id.searchItem);
+        Button submitButton = (Button) findViewById(R.id.submitButton);
+        //Launch on button press
+        submitButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //Get text and send with intent
+                String value = searchItem.getText().toString();
+                Intent nextActivity = new Intent(getBaseContext(), ItemsActivity.class);
+                nextActivity.putExtra("search", value);
+                startActivity(nextActivity);
+            }
+        });*/
+
+        Button loginBtn = (Button) findViewById(R.id.button_login_main);
+        loginBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //Create intent and send to login page
+                Intent intent = new Intent(getBaseContext(), Login.class);
+                startActivity(intent);
+            }
+        });
 
         //Launch admin activity
-        Button adminButton = (Button)findViewById(R.id.adminButton);
+        Button adminButton = (Button) findViewById(R.id.adminButton);
         adminButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -155,16 +202,33 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        Runnable runnable = new Runnable() {
+            @Override
+            public void run() {
+                while(true) {
+                    synchronized (this) {
+                        wifimanager = (WifiManager) getSystemService(Context.WIFI_SERVICE);
+                        connection = wifimanager.getConnectionInfo();
+
+                        if (connection.getSSID().equals(closestStore.getWifi())) {
+                            notifyClient(connection);
+                            break;
+                        }
+                    }
+                }
+                return;
+            }
+        };
+        Thread thread = new Thread(runnable);
+        thread.start();
+
         //Add click to item
-        ListView itemList = (ListView)findViewById(R.id.dealsView);
+        ListView itemList = (ListView) findViewById(R.id.dealsView);
         itemList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 //Start nav activity
-                Intent startNav = new Intent(getBaseContext(), MapsActivity.class);
-                startNav.putExtra("Department", closestStore.getDeals().get(position).getDepartment());
-                startNav.putExtra("Name", closestStore.getDeals().get(position).getName());
-                startActivity(startNav);
+                showAlert(view, position);
             }
         });
 
@@ -172,6 +236,27 @@ public class MainActivity extends AppCompatActivity {
         welcomeView = (TextView)findViewById(R.id.welcomeView);
 
         displayDeals();
+    }
+
+    private void notifyClient(WifiInfo wifi){
+        AlertDialog.Builder myAlert = new AlertDialog.Builder(this);
+        myAlert.setMessage("Welcome to The Warehouse!!!")
+                .setPositiveButton("View Deals", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                })
+                .setNegativeButton("Close", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                })
+                .setTitle("The Warehouse")
+                //.setIcon()
+                .create();
+        myAlert.show();
     }
 
     //Show notification
@@ -185,6 +270,36 @@ public class MainActivity extends AppCompatActivity {
             Toast.makeText(this, "Welcome to The Warehouse " + closestStore.getName(), Toast.LENGTH_SHORT).show();
             notify = false;
         }
+    }
+
+    public void showAlert(View view, final int position){
+        AlertDialog.Builder myAlert = new AlertDialog.Builder(this);
+        myAlert.setMessage("Information    " + closestStore.getDeals().get(position).getDepartment().toString())
+                .setPositiveButton("Add to Chart", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                    }
+                })
+                .setNeutralButton("Show In Store", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        Intent startNav = new Intent(getBaseContext(), NavActivity.class);
+                        startNav.putExtra("Department", closestStore.getDeals().get(position).getDepartment());
+                        startNav.putExtra("Name", closestStore.getDeals().get(position).getName());
+                        startActivity(startNav);
+                    }
+                })
+                .setNegativeButton("Close", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                })
+                .setTitle(closestStore.getDeals().get(position).getName().toString())
+                //.setIcon()
+                .create();
+        myAlert.show();
     }
 
     //Handle permission requests
@@ -221,6 +336,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+
     //Get closest store
     private void getClosestStores() {
         //Get reference to store data
@@ -250,7 +366,7 @@ public class MainActivity extends AppCompatActivity {
                         distance = clientLocation.distanceTo(location);
 
                         //Set store
-                        closestStore = new Store((String)store.get("Name"), location.getLatitude(), location.getLongitude());
+                        closestStore = new Store((String)store.get("Name"), location.getLatitude(), location.getLongitude(), (String)store.get("Wifi"));
                     }
                 }
 
@@ -268,7 +384,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     //Get items for store
-    private void getItems() {
+    protected void getItems() {
         //Get reference to store
         DatabaseReference itemsref = ref.child(closestStore.getName()).child("Items");
 
@@ -292,7 +408,6 @@ public class MainActivity extends AppCompatActivity {
                         closestStore.addItem(i);
                     }
                 }
-
                 displayDeals();
             }
 
@@ -303,10 +418,98 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    private ArrayList getDepartmentList(String department){
+        ArrayList DepartmentDeals = new ArrayList();
+        for (Item item : closestStore.getDeals())
+            if (item.getDepartment().equals(department)) {
+                DepartmentDeals.add(item);
+            }
+        return  DepartmentDeals;
+    }
+
+
     //Displays deals
     private void displayDeals() {
         //Display deals
+        ItemAdapter adaptItem = new ItemAdapter(this, 0, closestStore.getDeals());
+        ListView displayItems = (ListView) findViewById(R.id.dealsView);
+        displayItems.setAdapter(adaptItem);
+    }
+
+    private void displayDeals(ArrayList AL){
+        ItemAdapter adaptItem = new ItemAdapter(this, 0, AL);
+        ListView displayItems = (ListView) findViewById(R.id.dealsView);
+        displayItems.setAdapter(adaptItem);
+    }
+
+    //Get stores
+    private void getStores() {
+        //Stores reference
+        DatabaseReference storeRef = ref.child("stores");
+
+        //Loop and add stores
+        storeRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                //Get stores
+                Map<String, Object> storesData = (Map<String, Object>)dataSnapshot.getValue();
+                //Iterate and add to list
+                for(Map.Entry<String, Object> entry : storesData.entrySet()){
+                    //Get store
+                    Map<String, Object> data = (Map<String, Object>)entry.getValue();
+                    Map meta = (Map)data.get("meta");
+                    Map<String, Object> items = (Map<String, Object>)data.get("items");
+
+                    //Add to list
+                    if(meta != null) {
+                        Store s = new Store((String) meta.get("name"), (double)meta.get("latitude"), (double)meta.get("longitude"), (String)meta.get("Wifi"));
+
+                        //Add items
+                        if(items != null) {
+                            for(Map.Entry<String, Object> itemx : items.entrySet()) {
+                                Map<String, Object> item = (Map<String, Object>)itemx.getValue();
+
+                                Item i = new Item((String)item.get("name"), (String)item.get("description"), (String)item.get("department"), (double)item.get("price"));
+                                s.addItem(i);
+                            }
+                        }
+
+                        Stores.add(s);
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    //Set closest store
+    private void setClosest() {
+        //Hold distance and store
+        float distance = 0;
+
+        //Loop through and compare store
+        for(Store s : Stores) {
+            //Get location of store
+            if(s != null) {
+                Location l = new Location("");
+                l.setLatitude(s.getLatitude());
+                l.setLongitude(s.getLongitude());
+
+                //Get distance between store and user location
+                if (distance < l.distanceTo(clientLocation) || distance == 0) {
+                    distance = l.distanceTo(clientLocation);
+                    closestStore = s;
+                }
+            }
+        }
+
+        //Display deals
         ItemAdapter adaptItem = new ItemAdapter(this, 0, Items);
+
         ListView displayItems = (ListView) findViewById(R.id.dealsView);
         displayItems.setAdapter(adaptItem);
     }

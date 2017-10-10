@@ -8,6 +8,7 @@
     android:background="#0000">
 
     /* Displays title */
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="60dp"
@@ -16,23 +17,30 @@
         <ImageView
             android:layout_width="60dp"
             android:layout_height="60dp"
-            android:src="@drawable/logo"/>
+            android:src="@drawable/logo" />
 
         <TextView
+            android:id="@+id/welcomeView"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:id="@+id/welcomeView"
-            android:textColor="#FFFFFF"
             android:gravity="center"
-            android:textSize="20dp"/>
+            android:textColor="#FFFFFF"
+            android:textSize="20dp" />
+
+        <Button
+            android:id="@+id/button_login_main"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text="Login" />
 
     </LinearLayout>
 
     /* Control where deals are from */
+
     <Spinner
+        android:id="@+id/departmentSpinner"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/departmentSpinner">
+        android:layout_height="wrap_content">
 
     </Spinner>
 
@@ -74,6 +82,5 @@
             android:layout_weight="1"
             android:text="MAP" />
     </LinearLayout>
-
 
 </LinearLayout>
