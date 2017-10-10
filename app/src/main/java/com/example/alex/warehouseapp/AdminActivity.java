@@ -114,7 +114,7 @@ public class AdminActivity extends AppCompatActivity {
                 double longitude = Double.parseDouble(((EditText)findViewById(R.id.storeLongitude)).getText().toString());
 
                 //Create store
-                Store store = new Store(name, latitude, longitude);
+                Store store = new Store(name, latitude, longitude,"");
                 //Create item and map
                 Map<String, Object> update = new HashMap<>();
                 Map<String, Object> items = store.map();

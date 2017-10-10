@@ -2,10 +2,13 @@ package com.example.alex.warehouseapp;
 
 import android.*;
 import android.Manifest;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
+import android.net.wifi.WifiInfo;
+import android.net.wifi.WifiManager;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
@@ -64,6 +67,9 @@ public class MainActivity extends AppCompatActivity {
 
     //
     private TextView welcomeView;
+
+    private WifiManager wifimanager;
+    private WifiInfo connection;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -125,7 +131,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
         //Set default store
-        closestStore = new Store("No store selected", 0, 0);
+        closestStore = new Store("No store selected", 0, 0, "");
 
         //Setup spinner
         Spinner departmentSpinner = (Spinner) findViewById(R.id.departmentSpinner);
@@ -150,7 +156,7 @@ public class MainActivity extends AppCompatActivity {
         });
 
         //Setup search edit text to launch item activity
-        final EditText searchItem = (EditText) findViewById(R.id.searchItem);
+        /*final EditText searchItem = (EditText) findViewById(R.id.searchItem);
         Button submitButton = (Button) findViewById(R.id.submitButton);
         //Launch on button press
         submitButton.setOnClickListener(new View.OnClickListener() {
@@ -161,6 +167,16 @@ public class MainActivity extends AppCompatActivity {
                 Intent nextActivity = new Intent(getBaseContext(), ItemsActivity.class);
                 nextActivity.putExtra("search", value);
                 startActivity(nextActivity);
+            }
+        });*/
+
+        Button loginBtn = (Button) findViewById(R.id.button_login_main);
+        loginBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //Create intent and send to login page
+                Intent intent = new Intent(getBaseContext(), Login.class);
+                startActivity(intent);
             }
         });
 
@@ -174,6 +190,26 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
+        Runnable runnable = new Runnable() {
+            @Override
+            public void run() {
+                while(true) {
+                    synchronized (this) {
+                        wifimanager = (WifiManager) getSystemService(Context.WIFI_SERVICE);
+                        connection = wifimanager.getConnectionInfo();
+
+                        if (connection.getSSID().equals(closestStore.getWifi())) {
+                            notifyClient(connection);
+                            break;
+                        }
+                    }
+                }
+                return;
+            }
+        };
+        Thread thread = new Thread(runnable);
+        thread.start();
 
         //Add click to item
         ListView itemList = (ListView) findViewById(R.id.dealsView);
@@ -189,6 +225,27 @@ public class MainActivity extends AppCompatActivity {
         welcomeView = (TextView)findViewById(R.id.welcomeView);
 
         displayDeals();
+    }
+
+    private void notifyClient(WifiInfo wifi){
+        AlertDialog.Builder myAlert = new AlertDialog.Builder(this);
+        myAlert.setMessage("Welcome to The Warehouse!!!")
+                .setPositiveButton("View Deals", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                })
+                .setNegativeButton("Close", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                })
+                .setTitle("The Warehouse")
+                //.setIcon()
+                .create();
+        myAlert.show();
     }
 
     //Show notification
@@ -298,7 +355,7 @@ public class MainActivity extends AppCompatActivity {
                         distance = clientLocation.distanceTo(location);
 
                         //Set store
-                        closestStore = new Store((String)store.get("Name"), location.getLatitude(), location.getLongitude());
+                        closestStore = new Store((String)store.get("Name"), location.getLatitude(), location.getLongitude(), (String)store.get("Wifi"));
                     }
                 }
 
@@ -394,7 +451,7 @@ public class MainActivity extends AppCompatActivity {
 
                     //Add to list
                     if(meta != null) {
-                        Store s = new Store((String) meta.get("name"), (double)meta.get("latitude"), (double)meta.get("longitude"));
+                        Store s = new Store((String) meta.get("name"), (double)meta.get("latitude"), (double)meta.get("longitude"), (String)meta.get("Wifi"));
 
                         //Add items
                         if(items != null) {
