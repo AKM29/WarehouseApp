@@ -174,7 +174,7 @@ public class MainActivity extends AppCompatActivity {
         loginBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //Create intent and send to admin page
+                //Create intent and send to login page
                 Intent intent = new Intent(getBaseContext(), Login.class);
                 startActivity(intent);
             }
@@ -191,25 +191,25 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        final Thread thread = new Thread() {
+        Runnable runnable = new Runnable() {
+            @Override
             public void run() {
-                try{
-                    while(true){
-                        String display;
+                while(true) {
+                    synchronized (this) {
                         wifimanager = (WifiManager) getSystemService(Context.WIFI_SERVICE);
                         connection = wifimanager.getConnectionInfo();
 
-                        if(connection.getSSID().equals(closestStore.getWifi())){
+                        if (connection.getSSID().equals(closestStore.getWifi())) {
                             notifyClient(connection);
+                            break;
                         }
                     }
-                }finally {
-
                 }
+                return;
             }
         };
-
-        thread.run();
+        Thread thread = new Thread(runnable);
+        thread.start();
 
         //Add click to item
         ListView itemList = (ListView) findViewById(R.id.dealsView);
