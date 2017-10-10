@@ -451,7 +451,7 @@ public class MainActivity extends AppCompatActivity {
 
                     //Add to list
                     if(meta != null) {
-                        Store s = new Store((String) meta.get("name"), (double)meta.get("latitude"), (double)meta.get("longitude"), "lol idk");
+                        Store s = new Store((String) meta.get("name"), (double)meta.get("latitude"), (double)meta.get("longitude"), (String)meta.get("Wifi"));
 
                         //Add items
                         if(items != null) {
