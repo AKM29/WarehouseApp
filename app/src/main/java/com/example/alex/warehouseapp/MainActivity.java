@@ -170,6 +170,16 @@ public class MainActivity extends AppCompatActivity {
             }
         });*/
 
+        Button loginBtn = (Button) findViewById(R.id.button_login_main);
+        loginBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //Create intent and send to admin page
+                Intent intent = new Intent(getBaseContext(), Login.class);
+                startActivity(intent);
+            }
+        });
+
         //Launch admin activity
         Button adminButton = (Button) findViewById(R.id.adminButton);
         adminButton.setOnClickListener(new View.OnClickListener() {
